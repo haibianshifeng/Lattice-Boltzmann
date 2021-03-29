@@ -43,9 +43,8 @@ namespace boltzmann {
             }
 
             for (int c = 0; c < n_colors; c++) {
-                double h = (2.0 / 3) * (1 - c * 1.0 / n_colors);
-                h += 0.03 * sin(6 * M_PI * h);
-                colors[c] = HSBtoRGB((float) h, 1, 1);
+                double h = (double)c / n_colors;
+                colors[c] = HSBtoRGB((float) h, 0.75, 1);
             }
         }
 
