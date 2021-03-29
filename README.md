@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <img src="data/2.gif">
+  <img src="data/7.gif">
 </p>
 
 <p align="center">
