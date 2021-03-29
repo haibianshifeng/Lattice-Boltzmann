@@ -8,6 +8,10 @@
   <img src="data/2.gif">
 </p>
 
+<p align="center">
+  <img src="data/3.gif">
+</p>
+
 ### Build the software
 
 This software was tested on:
