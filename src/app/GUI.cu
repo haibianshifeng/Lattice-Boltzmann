@@ -2,65 +2,80 @@
 
 namespace boltzmann {
     namespace app {
-        GUI::GUI(sf::RenderWindow *render_window_, boltzmann::core::Simulation *simulation_)
+        GUI::GUI(sf::Window *render_window_, boltzmann::core::Simulation *simulation_)
                 : render_window(render_window_), simulation(simulation_) {
-            pixels = new sf::Vertex[this->simulation->ydim * this->simulation->xdim];
-            vertex_buffer.create(this->simulation->ydim * this->simulation->xdim);
+            cudaMallocManaged(&coordinates, sizeof(float *) * simulation->ydim);
+            cudaMallocManaged(&pixels, sizeof(uint8_t *) * simulation->ydim);
             cudaMallocManaged(&colors, sizeof(sf::Color) * n_colors);
-            cudaMallocManaged(&pixels, sizeof(sf::Vertex) * this->simulation->ydim * this->simulation->xdim);
 
             for (int y = 0; y < this->simulation->ydim; y++) {
+                cudaMallocManaged(&coordinates[y], sizeof(float) * 2 * simulation->xdim);
+                cudaMallocManaged(&pixels[y], sizeof(uint8_t) * 3 * simulation->xdim);
+
                 for (int x = 0; x < this->simulation->xdim; x++) {
-                    pixels[y * this->simulation->xdim + x].position = sf::Vector2f{static_cast<float>(x),
-                                                                                   static_cast<float>(y)};
-                    if(this->simulation->barrier[y][x]) {
-                        pixels[y * this->simulation->xdim + x].color = sf::Color{125, 125, 125};
+                    coordinates[y][2 * x] = (float) x;
+                    coordinates[y][2 * x + 1] = (float) y;
+                    if (this->simulation->barrier[y][x]) {
+                        pixels[y][x * 3] = 125;
+                        pixels[y][x * 3 + 1] = 125;
+                        pixels[y][x * 3 + 2] = 125;
                     }
                 }
             }
 
             for (int c = 0; c < n_colors; c++) {
-                double h = (double)c / n_colors;
-                h += 3 * sin(4*M_PI*h);
+                double h = (double) c / n_colors;
+                h += 3 * sin(4 * M_PI * h);
                 colors[c] = HSBtoRGB((float) h, 0.75, 1);
             }
 
-            if(!font.loadFromFile("../../data/arial.ttf")) {
+            if (!font.loadFromFile("../../data/arial.ttf")) {
                 THROW_EXCEPTION("Can not find 'arial.ttf'. Exit now!")
             }
         }
 
         GUI::~GUI() {
+            for (int y = 0; y < this->simulation->ydim; y++) {
+                cudaFree(&coordinates[y]);
+                cudaFree(&pixels[y]);
+            }
             cudaFree(pixels);
             cudaFree(colors);
+            cudaFree(coordinates);
         }
 
         void GUI::paint() {
             boltzmann::core::update_pixels<<<simulation->xdim, simulation->ydim>>>(
                     simulation->ydim,
-                    simulation->xdim,
-                    pixels,
-                    simulation->barrier,
-                    n_colors,
-                    simulation->curl,
-                    contrast,
-                    colors);
+                            simulation->xdim,
+                            pixels,
+                            simulation->barrier,
+                            n_colors,
+                            simulation->curl,
+                            contrast,
+                            colors);
             cudaDeviceSynchronize();
-            //vertex_buffer.update(pixels);
-            //render_window->draw(vertex_buffer);
-            this->draw_fps();
+
+            glClearColor(0, 0, 0, 0);
+            glClear(GL_COLOR_BUFFER_BIT);
+
+            glPushMatrix();
+            glEnableClientState(GL_VERTEX_ARRAY);
+            glEnableClientState(GL_COLOR_ARRAY);
+
+            for(uint32_t y = 0; y < this->simulation->ydim; y++) {
+                glVertexPointer(2, GL_FLOAT, 0, coordinates[y]);
+                glColorPointer(3, GL_UNSIGNED_BYTE, 0, pixels[y]);
+                glDrawArrays(GL_POINTS, 0, simulation->xdim);
+            }
+
+            glDisableClientState(GL_VERTEX_ARRAY);
+            glDisableClientState(GL_COLOR_ARRAY);
+
+            glPopMatrix();
+            glFlush();
+
             render_window->display();
-
-        }
-
-        void GUI::draw_fps() {
-            std::stringstream ss;
-            fps_measurement.update();
-            ss << "FPS: " << fps_measurement.getFPS();
-            sf::Text fpsText{ss.str(), font, 10};
-            fpsText.setPosition(simulation->xdim - 50, 10);
-            fpsText.setFillColor(sf::Color::Black);
-            render_window->draw(fpsText);
         }
     }
 }

@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <app/Controller.h>
+#include <SFML/OpenGL.hpp>
 #include <app/GUI.h>
 
 
@@ -7,8 +8,15 @@ int main() {
     constexpr uint32_t width = 1000;
     constexpr uint32_t height = 1000;
 
-    sf::RenderWindow window({width, height}, "Boltzmann");
+    sf::Window window(sf::VideoMode{width, height, 24}, "Boltzmann");
     window.setFramerateLimit(60);
+
+    glViewport(0, 0, width, height); // viewport definition
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0, width, height, 0, -1, 1);
+    glPointSize(1);
+
 
     boltzmann::core::Simulation simulation(width, height);
 

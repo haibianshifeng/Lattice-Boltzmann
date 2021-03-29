@@ -14,12 +14,12 @@ namespace boltzmann {
     namespace app {
         class Controller {
         private:
-            sf::RenderWindow *render_window;
+            sf::Window *render_window;
             boltzmann::app::GUI *gui;
             boltzmann::core::Simulation * simulation;
             sf::Event event{};
         public:
-            Controller(sf::RenderWindow *render_window_, GUI *gui_, core::Simulation *simulation_);
+            Controller(sf::Window *render_window_, GUI *gui_, core::Simulation *simulation_);
 
             void start();
         };

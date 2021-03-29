@@ -6,6 +6,7 @@
 #include <SFML/Audio.hpp>
 #include <iostream>
 #include <memory>
+#include <SFML/OpenGL.hpp>
 #include "utils/Exception.h"
 #include "core/Simulation.h"
 #include "utils/Colors.h"
@@ -16,18 +17,23 @@ namespace boltzmann {
     namespace app {
         class GUI {
         private:
-            sf::RenderWindow *render_window;
-            boltzmann::core::Simulation * simulation;
-            sf::Vertex * pixels;
-            sf::VertexBuffer vertex_buffer;
+            sf::Window *render_window;
+            boltzmann::core::Simulation *simulation;
             int n_colors = 12000;
-            sf::Color * colors;
+            sf::Color *colors;
             double contrast = 400;
             boltzmann::utils::FPS fps_measurement{};
             sf::Font font;
+
+            // OpenGL requires a static array of floats to represent coords : [x1][y1][x2][y2]...[xn][yn]
+            float **coordinates;
+
+            // OpenGL requires a static array to represent the colors of the dots : [r1][g1][b1][r2][g2][b2]...[rn][gn][bn]
+            uint8_t **pixels;
             void draw_fps();
+
         public:
-            GUI(sf::RenderWindow *render_window_, core::Simulation *simulation_);
+            GUI(sf::Window *render_window_, core::Simulation *simulation_);
 
             virtual ~GUI();
 

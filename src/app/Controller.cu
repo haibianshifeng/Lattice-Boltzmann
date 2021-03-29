@@ -2,7 +2,7 @@
 
 namespace boltzmann {
     namespace app {
-        Controller::Controller(sf::RenderWindow *render_window_, GUI *gui_, core::Simulation *simulation_) : render_window(
+        Controller::Controller(sf::Window *render_window_, GUI *gui_, core::Simulation *simulation_) : render_window(
                 render_window_), gui(gui_), simulation(simulation_) {}
 
         void Controller::start() {

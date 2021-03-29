@@ -209,7 +209,7 @@ namespace boltzmann {
         }
 
         __global__ void
-        update_pixels(uint32_t ydim, uint32_t xdim, sf::Vertex *pixels, bool **barrier, double n_colors, double **curl,
+        update_pixels(uint32_t ydim, uint32_t xdim, uint8_t **pixels, bool **barrier, double n_colors, double **curl,
                       double contrast, sf::Color *colors) {
             uint32_t x = blockIdx.x;
             uint32_t y = threadIdx.x;
@@ -221,7 +221,9 @@ namespace boltzmann {
                                            (0.5f + curl[y][x] * contrast * 0.3f)));
                     colorIndex = max(0.0f, colorIndex);
                     colorIndex = min(n_colors - 1, colorIndex);
-                    pixels[y * xdim + x].color = colors[(uint32_t) colorIndex];
+                    pixels[y][3 * x] = colors[(uint32_t) colorIndex].r;
+                    pixels[y][3 * x + 1] = colors[(uint32_t) colorIndex].g;
+                    pixels[y][3 * x + 2] = colors[(uint32_t) colorIndex].b;
                 }
             }
         }

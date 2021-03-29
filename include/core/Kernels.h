@@ -145,7 +145,7 @@ namespace boltzmann {
 
         __global__
         void
-        update_pixels(uint32_t ydim, uint32_t xdim, sf::Vertex *pixels, bool **barrier, double n_colors, double **curl,
+        update_pixels(uint32_t ydim, uint32_t xdim, uint8_t **pixels, bool **barrier, double n_colors, double **curl,
                       double contrast, sf::Color *colors);
     }
 }
