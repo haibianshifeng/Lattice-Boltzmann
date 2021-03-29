@@ -132,7 +132,7 @@ RIGHT MOUSE - Switch between tradition colors and non-traditional colors
 - Initially the project was planned to run on an Android phone. But it turned out a mobile phone would not have enough
   computation power to run the simulation on high resolution (even with ARM Neon acceleration). So I pivoted, learned 
   some basic CUDA and turned to a desktop application.
-- The original implementation was column-major, which is kind of weird (maybe I overseen some details?).
+- The original implementation of professor Daniel Schroeder [[3]](#3) was column-major, which is kind of weird (maybe I overseen some details?).
   The current implementation was made row-major.
 - The implementation sometimes suffers on some numerical instability problems, which I fail to fix.
 - Even when OpenGL is quite awesome and low level, I would not want to use this library in the future anymore. At least 
@@ -148,3 +148,7 @@ Professor Daniel V. Schroeder - Course Physics 3300 - Weber State University.
 <a id="2">[2]</a>
 https://www-m2.ma.tum.de/bin/view/Allgemeines/MA5344SS17 (2011).
 Lattice Boltzmann methods MA5344 - Technical University München.
+
+<a id="3">[3]</a>
+http://physics.weber.edu/schroeder/fluids/LatticeBoltzmannDemo.java.txt (2012).
+Professor Daniel V. Schroeder - Course Physics 3300 - Weber State University.
