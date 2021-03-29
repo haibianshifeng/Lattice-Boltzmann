@@ -109,22 +109,22 @@ namespace boltzmann {
 
             cudaDeviceSynchronize();
 
-            this->draw_circle(100, 100, 40);
-            this->draw_circle(100, 300, 40);
-            this->draw_circle(100, 500, 40);
-            this->draw_circle(100, 700, 40);
-            this->draw_circle(100, 900, 40);
+            this->draw_circle(100, 100, 20);
+            this->draw_circle(100, 300, 20);
+            this->draw_circle(100, 500, 20);
+            this->draw_circle(100, 700, 20);
+            this->draw_circle(100, 900, 20);
 
-            this->draw_circle(250, 200, 40);
-            this->draw_circle(250, 400, 40);
-            this->draw_circle(250, 600, 40);
-            this->draw_circle(250, 800, 40);
+            this->draw_circle(250, 200, 20);
+            this->draw_circle(250, 400, 20);
+            this->draw_circle(250, 600, 20);
+            this->draw_circle(250, 800, 20);
 
-            this->draw_circle(400, 100, 40);
-            this->draw_circle(400, 300, 40);
-            this->draw_circle(400, 500, 40);
-            this->draw_circle(400, 700, 40);
-            this->draw_circle(400, 900, 40);
+            this->draw_circle(400, 100, 20);
+            this->draw_circle(400, 300, 20);
+            this->draw_circle(400, 500, 20);
+            this->draw_circle(400, 700, 20);
+            this->draw_circle(400, 900, 20);
 
             this->synchronize();
             cudaDeviceSynchronize();

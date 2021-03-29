@@ -19,20 +19,26 @@
 
 typedef struct cli_paramters {
     bool recording;
+    bool freaky_colors;
 }CliParameters;
 
 int main(int argc, char ** argv) {
-    CliParameters  cli_parameters;
-
+    /*
+     * Parsing command line arguments
+     */
+    CliParameters  cli_parameters{
+        .recording = true,
+        .freaky_colors = false
+    };
     CLI::App app{"Lattice Boltzmann Simulation"};
-
     app.add_flag("--recording",
                  cli_parameters.recording,
                  "Record mode on. Default false.");
 
+    app.add_flag("--freaky",
+                 cli_parameters.freaky_colors,
+                 "Freaky colors on. Default false.");
     CLI11_PARSE(app, argc, argv)
-
-    std::cout << cli_parameters.recording << std::endl;
 
     /*
      * Initialize SFML objects for global usage
@@ -55,7 +61,7 @@ int main(int argc, char ** argv) {
      * Initialize project's specific objects
      */
     boltzmann::core::Simulation simulation(width, height);
-    boltzmann::app::GUI gui(&window, &simulation);
+    boltzmann::app::GUI gui(&window, &simulation, cli_parameters.freaky_colors);
     boltzmann::app::Controller controller(&window, &gui, &simulation);
 
     /*

@@ -2,8 +2,8 @@
 
 namespace boltzmann {
     namespace app {
-        GUI::GUI(sf::Window *render_window_, boltzmann::core::Simulation *simulation_)
-                : render_window(render_window_), simulation(simulation_) {
+        GUI::GUI(sf::Window *render_window_, boltzmann::core::Simulation *simulation_, bool freaky_colors)
+                : render_window(render_window_), simulation(simulation_), colorful(freaky_colors) {
             // Allocate memory for OpenGL coordinates
             cudaMallocManaged(&coordinates, sizeof(float *) * simulation->ydim);
 
@@ -53,18 +53,18 @@ namespace boltzmann {
              * 3: y velocity
              * 4: density
              */
-            switch(mode) {
+            switch (mode) {
                 case 0:
-                boltzmann::core::update_pixels_curl<<<simulation->xdim, simulation->ydim>>>(
-                        simulation->ydim,
-                                simulation->xdim,
-                                pixels,
-                                simulation->barrier,
-                                n_colors,
-                                simulation->curl,
-                                contrast,
-                                colors);
-                break;
+                    boltzmann::core::update_pixels_curl<<<simulation->xdim, simulation->ydim>>>(
+                    simulation->ydim,
+                            simulation->xdim,
+                            pixels,
+                            simulation->barrier,
+                            n_colors,
+                            simulation->curl,
+                            contrast,
+                            colors);
+                    break;
                 case 1:
                     boltzmann::core::update_pixels_speed<<<simulation->xdim, simulation->ydim>>>(
                     simulation->ydim,
@@ -132,7 +132,7 @@ namespace boltzmann {
             glEnableClientState(GL_VERTEX_ARRAY);
             glEnableClientState(GL_COLOR_ARRAY);
 
-            for(uint32_t y = 0; y < this->simulation->ydim; y++) {
+            for (uint32_t y = 0; y < this->simulation->ydim; y++) {
                 glVertexPointer(2, GL_FLOAT, 0, coordinates[y]);
                 glColorPointer(3, GL_UNSIGNED_BYTE, 0, pixels[y]);
                 glDrawArrays(GL_POINTS, 0, simulation->xdim);
@@ -162,18 +162,36 @@ namespace boltzmann {
         void GUI::setNColors(int nColors) {
             this->n_colors = std::max(1000, nColors);
             this->n_colors = std::min(1000000, this->n_colors);
-            if(this->colors) {
+
+            if (this->colors) {
                 cudaFree(colors);
             }
 
             // Allocate memory for rainbow colors spectrum
             cudaMallocManaged(&colors, sizeof(sf::Color) * n_colors);
 
-            for (int c = 0; c < n_colors; c++) {
-                double h = (double) c / n_colors;
-                h += 10 * sin(2 * M_PI * h);
-                colors[c] = HSBtoRGB((float) h, 0.75, 1);
+            if (this->colorful) {
+                for (int c = 0; c < n_colors; c++) {
+                    double h = (double) c / n_colors;
+                    h += 10 * sin(2 * M_PI * h);
+                    colors[c] = boltzmann::utils::HSBtoRGB((float) h, 0.75, 1);
+                }
+            } else {
+                for (int c = 0; c < n_colors; c++) {
+                    double h = (2.0 / 3) * (1 - c * 1.0 / n_colors);
+                    h += 0.03 * sin(6 * M_PI * h);
+                    colors[c] = boltzmann::utils::HSBtoRGB((float) h, (float) 1, (float)1);
+                }
             }
+        }
+
+        bool GUI::isColorful() const {
+            return colorful;
+        }
+
+        void GUI::setColorful(bool colorful_) {
+            GUI::colorful = colorful_;
+            this->setNColors(this->getNColors());
         }
     }
 }

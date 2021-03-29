@@ -44,6 +44,12 @@ namespace boltzmann {
             float **coordinates;
             // OpenGL requires a static array to represent the colors of the dots : [r1][g1][b1][r2][g2][b2]...[rn][gn][bn]
             uint8_t **pixels;
+
+            /*
+             * Traditional colors if false
+             * Freaky colors if true
+             */
+            bool colorful;
         public:
             /**
              * Constructor
@@ -51,7 +57,7 @@ namespace boltzmann {
              * @param render_window_ SFML window
              * @param simulation_ simulation object
              */
-            GUI(sf::Window *render_window_, core::Simulation *simulation_);
+            GUI(sf::Window *render_window_, core::Simulation *simulation_, bool freaky_colors);
 
             /**
              * Destructor
@@ -88,6 +94,10 @@ namespace boltzmann {
              * Setter n_colors
              */
             void setNColors(int nColors);
+
+            bool isColorful() const;
+
+            void setColorful(bool colorful_);
         };
     }
 }

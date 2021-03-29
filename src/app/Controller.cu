@@ -39,14 +39,20 @@ namespace boltzmann {
                             } else if(this->event.key.code == sf::Keyboard::Down) {
                                 this->simulation->setOmega(this->simulation->getOmega() - 0.001);
                             }
+                            break;
                         case sf::Event::MouseButtonPressed:
-                            if(recording_mode) {
-                                if(rendering) {
-                                    rendering = false;
-                                } else {
-                                    rendering = true;
+                            if(this->event.mouseButton.button == sf::Mouse::Left) {
+                                if (recording_mode) {
+                                    if (rendering) {
+                                        rendering = false;
+                                    } else {
+                                        rendering = true;
+                                    }
                                 }
+                            }else if(this->event.mouseButton.button == sf::Mouse::Right){
+                                this->gui->setColorful(!this->gui->isColorful());
                             }
+                            break;
                         default:
                             break;
                     }
