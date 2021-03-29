@@ -17,6 +17,8 @@ namespace boltzmann {
                     }
                 }
 
+                // We simulate four steps at once to make the simulation faster
+                // The number of simulation steps at one time should be even
                 for(int i = 0; i < 4; i++) {
                     boltzmann::utils::TimeIt collision_step("Collision step");
                     this->simulation->collide();
@@ -43,13 +45,13 @@ namespace boltzmann {
                     bouncing_step.end();
                 }
 
-
+                // Calculate flow curl at the moment
                 boltzmann::utils::TimeIt curl_step("Curl step");
                 this->simulation->compute_curl();
                 cudaDeviceSynchronize();
                 curl_step.end();
 
-
+                // Render world's current state
                 boltzmann::utils::TimeIt rendering_step("Rendering step");
                 this->gui->paint();
                 rendering_step.end();

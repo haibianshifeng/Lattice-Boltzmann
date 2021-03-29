@@ -3,6 +3,9 @@
 namespace boltzmann {
     namespace core {
         Simulation::Simulation(int width_, int height_) : xdim(width_), ydim(height_) {
+            if(height_ > 1024) {
+                THROW_EXCEPTION("Height can be maximal 1024.")
+            }
             this->xdim = width_;
             this->ydim = height_;
 
@@ -204,7 +207,7 @@ namespace boltzmann {
             for (int y = 0; y < ydim; y++) {
                 for (int x = 0; x < xdim; x++) {
                     if (barrier[y][x]) {
-                        zeroSite(x, y);
+                        zero(x, y);
                     } else {
                         n0[y][x] = four9ths * (1 - 1.5 * v * v);
                         nE[y][x] = one9th * (1 + 3 * v + 3 * v * v);
@@ -224,7 +227,7 @@ namespace boltzmann {
             }
         }
 
-        void Simulation::zeroSite(int x, int y) const {
+        void Simulation::zero(int x, int y) const {
             n0[y][x] = 0;
             nE[y][x] = 0;
             nW[y][x] = 0;
@@ -363,7 +366,7 @@ namespace boltzmann {
 
         void Simulation::draw_barrier(int x, int y) const {
             barrier[y][x] = true;
-            zeroSite(x, y);
+            zero(x, y);
         }
 
         void Simulation::draw_circle(int x_center, int y_center, int radius) const {

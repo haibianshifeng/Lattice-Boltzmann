@@ -14,11 +14,22 @@
 
 namespace boltzmann {
     namespace core {
+        /**
+         * Core simulation object
+         *
+         * Each pixel corresponds a particle
+         */
         class Simulation{
         public:
+            /*
+             * Height and width
+             */
             int xdim;
             int ydim;
 
+            /*
+             * Main buffer, names and functionalities inspired from the PDF included in this repository
+             */
             double** n0;
             double** nN;
             double** nS;
@@ -35,6 +46,10 @@ namespace boltzmann {
             double** curl;
             bool** barrier;
 
+            /*
+             * Temporary buffer, which has identical content as the main buffer. Since we want to parallelize
+             * the streaming and bouncing step (which are difficult to parallelize, we must create those buffers.
+             */
             double** n0_temp;
             double** nN_temp;
             double** nS_temp;
@@ -51,29 +66,72 @@ namespace boltzmann {
             double** curl_temp;
             bool** barrier_temp;
 
+            /*
+             * Speed of particle and omega factor (functionality can be looked at in the PDF included in the repository)
+             */
             double v = 0.15;
             double omega = 1 / (3 * 0.1 + 0.5);
 
-            void init_fluid() const;
-
-            void zeroSite(int x, int y) const;
-
+            /**
+             * Constructor of class
+             *
+             * @param width_ Can be any size
+             * @param height_ maximal 1024 since CUDA only allows us to use 1024 threads per block.
+             */
             Simulation(int width_, int height_);
 
+            /**
+             * Destructor
+             */
             virtual ~Simulation();
 
+            /**
+             * Initialize begin condition
+             */
+            void init_fluid() const;
+
+            /**
+             * Set buffer at position x and y to 0
+             */
+            void zero(int x, int y) const;
+
+            /**
+             * Draw wall at position x and y
+             */
             void draw_barrier(int x, int y) const;
 
+            /**
+             * Collision step
+             */
             void collide() const;
 
+            /**
+             * Stream step
+             */
             void stream() const;
 
+            /**
+             * Bounce step
+             */
             void bounce() const;
 
+            /**
+             * Draw a round circle
+             *
+             * @param x_center x center of circle
+             * @param y_center y center of circle
+             * @param radius radius of circle
+             */
             void draw_circle(int x_center, int y_center, int radius) const;
 
+            /**
+             * Compute the curl of the current flow
+             */
             void compute_curl() const;
 
+            /**
+             * Synchronize temporary buffer with main buffer
+             */
             void synchronize() const;
         };
     }

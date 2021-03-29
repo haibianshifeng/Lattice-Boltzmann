@@ -28,10 +28,6 @@ namespace boltzmann {
                 h += 3 * sin(4 * M_PI * h);
                 colors[c] = HSBtoRGB((float) h, 0.75, 1);
             }
-
-            if (!font.loadFromFile("../../data/arial.ttf")) {
-                THROW_EXCEPTION("Can not find 'arial.ttf'. Exit now!")
-            }
         }
 
         GUI::~GUI() {
