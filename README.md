@@ -6,13 +6,13 @@
 > 
 > -- <cite>[Ludwid Boltzmann (*1844 in Wien, ✟ in Duino bei Triest)]</cite>
 
-Inspired by the original work of https://physics.weber.edu/schroeder/javacourse/LatticeBoltzmann.pdf
+Inspired by the original work of Daniel V. Schroeder[[1]](#1). 
 
 The Lattice Boltzmann is a simple and relatively young method of Computational fluid dynamics. In contrast to traditional 
 computational fluid dynamics (CFD) approaches based on the conservation of macroscopic quantities like mass, momentum, and energy, 
 the Lattice Boltzmann method (LBM) models the fluid by the kinetics of discrete particles that propagate (streaming step) 
 and collide (relaxation step) on a discrete lattice mesh. Due to its particular nature, LBM has several advantages, 
-such as dealing with complex boundaries, incorporating microscopic interactions, and parallelization of the algorithm.[[1]](#1)
+such as dealing with complex boundaries, incorporating microscopic interactions, and parallelization of the algorithm.[[2]](#2)
 
 This project hence aims to demonstrate the easy-to-parallelize property of the algorithm and exploits the graphical processing unit (GPU) 
 for computing and rendering purpose.
@@ -124,5 +124,9 @@ RIGHT MOUSE - Switch between tradition colors and non-traditional colors
 ### References
 
 <a id="1">[1]</a>
-https://www-m2.ma.tum.de/bin/view/Allgemeines/MA5344SS17 (1968).
-Lattice Boltzmann methods (MA5344) - Technical University München.
+https://physics.weber.edu/schroeder/javacourse/LatticeBoltzmann.pdf (2012).
+Professor Daniel V. Schroeder - Course Physics 3300 - Weber State University.
+
+<a id="2">[2]</a>
+https://www-m2.ma.tum.de/bin/view/Allgemeines/MA5344SS17 (2011).
+Lattice Boltzmann methods MA5344 - Technical University München.
