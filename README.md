@@ -15,7 +15,14 @@ and collide (relaxation step) on a discrete lattice mesh. Due to its particular 
 such as dealing with complex boundaries, incorporating microscopic interactions, and parallelization of the algorithm.[[2]](#2)
 
 This project hence aims to demonstrate the easy-to-parallelize property of the algorithm and exploits the graphical processing unit (GPU) 
-for computing and rendering purpose.
+for computing and rendering purpose, specially for scientific programming. 
+
+CUDA was chosen as the language to go, since the the language was excellently engineered and makes the programming experience very 
+comfortable. If the programmer knows his way around C/C++, he could get familiar quickly with NVIDIA's proprietary language. The final 
+rendering is done with OpenGL. 
+
+Readers with further interest for technical details can take a look at the included `tutorial.pdf` of professor Daniel Schroeder, 
+an excellent introduction into the topic.
 
 ## Some results
 
