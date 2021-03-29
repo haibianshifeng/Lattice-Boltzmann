@@ -51,7 +51,7 @@ namespace boltzmann {
 
             void draw_barrier(int x, int y) const;
 
-            void collide();
+            void collide() const;
 
             void stream() const;
 

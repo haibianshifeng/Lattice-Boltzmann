@@ -5,101 +5,103 @@ namespace boltzmann {
         Simulation::Simulation(int width_, int height_) : xdim(width_), ydim(height_) {
             this->xdim = width_;
             this->ydim = height_;
-            this->n0 = new double *[this->ydim];
-            this->nN = new double *[this->ydim];
-            this->nS = new double *[this->ydim];
-            this->nE = new double *[this->ydim];
-            this->nW = new double *[this->ydim];
-            this->nNW = new double *[this->ydim];
-            this->nNE = new double *[this->ydim];
-            this->nSW = new double *[this->ydim];
-            this->nSE = new double *[this->ydim];
-            this->density = new double *[this->ydim];
-            this->xvel = new double *[this->ydim];
-            this->yvel = new double *[this->ydim];
-            this->speed2 = new double *[this->ydim];
-            this->curl = new double *[this->ydim];
-            this->barrier = new bool *[this->ydim];
+
+            cudaMallocManaged(&this->n0, sizeof(double*) * ydim);
+            cudaMallocManaged(&this->nN, sizeof(double*) * ydim);
+            cudaMallocManaged(&this->nS, sizeof(double*) * ydim);
+            cudaMallocManaged(&this->nE, sizeof(double*) * ydim);
+            cudaMallocManaged(&this->nW, sizeof(double*) * ydim);
+            cudaMallocManaged(&this->nNW, sizeof(double*) * ydim);
+            cudaMallocManaged(&this->nNE, sizeof(double*) * ydim);
+            cudaMallocManaged(&this->nSW, sizeof(double*) * ydim);
+            cudaMallocManaged(&this->nSE, sizeof(double*) * ydim);
+            cudaMallocManaged(&this->density, sizeof(double*) * ydim);
+            cudaMallocManaged(&this->xvel, sizeof(double*) * ydim);
+            cudaMallocManaged(&this->yvel, sizeof(double*) * ydim);
+            cudaMallocManaged(&this->speed2, sizeof(double*) * ydim);
+            cudaMallocManaged(&this->curl, sizeof(double*) * ydim);
+            cudaMallocManaged(&this->barrier, sizeof(bool*) * ydim);
 
             for (int i = 0; i < this->ydim; i++) {
-                this->n0[i] = new double[this->xdim];
-                this->nN[i] = new double[this->xdim];
-                this->nS[i] = new double[this->xdim];
-                this->nE[i] = new double[this->xdim];
-                this->nW[i] = new double[this->xdim];
-                this->nNW[i] = new double[this->xdim];
-                this->nNE[i] = new double[this->xdim];
-                this->nSW[i] = new double[this->xdim];
-                this->nSE[i] = new double[this->xdim];
-                this->density[i] = new double[this->xdim];
-                this->xvel[i] = new double[this->xdim];
-                this->yvel[i] = new double[this->xdim];
-                this->speed2[i] = new double[this->xdim];
-                this->curl[i] = new double[this->xdim];
-                this->barrier[i] = new bool[this->xdim];
+                cudaMallocManaged(&this->n0[i], sizeof(double) * xdim);
+                cudaMallocManaged(&this->nN[i], sizeof(double) * xdim);
+                cudaMallocManaged(&this->nS[i], sizeof(double) * xdim);
+                cudaMallocManaged(&this->nE[i], sizeof(double) * xdim);
+                cudaMallocManaged(&this->nW[i], sizeof(double) * xdim);
+                cudaMallocManaged(&this->nNW[i], sizeof(double) * xdim);
+                cudaMallocManaged(&this->nNE[i], sizeof(double) * xdim);
+                cudaMallocManaged(&this->nSW[i], sizeof(double) * xdim);
+                cudaMallocManaged(&this->nSE[i], sizeof(double) * xdim);
+                cudaMallocManaged(&this->density[i], sizeof(double) * xdim);
+                cudaMallocManaged(&this->xvel[i], sizeof(double) * xdim);
+                cudaMallocManaged(&this->yvel[i], sizeof(double) * xdim);
+                cudaMallocManaged(&this->speed2[i], sizeof(double) * xdim);
+                cudaMallocManaged(&this->curl[i], sizeof(double) * xdim);
+                cudaMallocManaged(&this->barrier[i], sizeof(barrier) * xdim);
 
-                std::memset(this->n0[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
-                std::memset(this->nN[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
-                std::memset(this->nS[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
-                std::memset(this->nW[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
-                std::memset(this->nE[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
-                std::memset(this->nNW[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
-                std::memset(this->nNE[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
-                std::memset(this->nSW[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
-                std::memset(this->nSE[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
-                std::memset(this->density[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
-                std::memset(this->xvel[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
-                std::memset(this->yvel[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
-                std::memset(this->speed2[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
-                std::memset(this->curl[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
-                std::memset(this->barrier[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(bool));
+                cudaMemset(this->n0[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
+                cudaMemset(this->nN[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
+                cudaMemset(this->nS[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
+                cudaMemset(this->nW[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
+                cudaMemset(this->nE[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
+                cudaMemset(this->nNW[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
+                cudaMemset(this->nNE[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
+                cudaMemset(this->nSW[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
+                cudaMemset(this->nSE[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
+                cudaMemset(this->density[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
+                cudaMemset(this->xvel[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
+                cudaMemset(this->yvel[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
+                cudaMemset(this->speed2[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
+                cudaMemset(this->curl[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
+                cudaMemset(this->barrier[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(bool));
             }
+
+            cudaDeviceSynchronize();
 
             this->draw_circle(50, 150, 20);
             this->draw_circle(150, 200, 20);
             this->draw_circle(50, 250, 20);
             this->draw_circle(150, 300, 20);
             this->draw_circle(50, 350, 20);
-
-            //this->draw_square(300, 0,310, 300);
-            //this->draw_square(350, 200,360, 499);
+            cudaDeviceSynchronize();
 
             this->init_fluid();
+            cudaDeviceSynchronize();
         }
 
         Simulation::~Simulation() {
             for (int i = 0; i < this->ydim; i++) {
-                delete this->n0[i];
-                delete this->nN[i];
-                delete this->nS[i];
-                delete this->nE[i];
-                delete this->nW[i];
-                delete this->nNW[i];
-                delete this->nNE[i];
-                delete this->nSW[i];
-                delete this->nSE[i];
-                delete this->density[i];
-                delete this->xvel[i];
-                delete this->yvel[i];
-                delete this->speed2[i];
-                delete this->curl[i];
-                delete this->barrier[i];
+                cudaFree(this->n0[i]);
+                cudaFree(this->nN[i]);
+                cudaFree(this->nS[i]);
+                cudaFree(this->nE[i]);
+                cudaFree(this->nW[i]);
+                cudaFree(this->nNW[i]);
+                cudaFree(this->nNE[i]);
+                cudaFree(this->nSW[i]);
+                cudaFree(this->nSE[i]);
+                cudaFree(this->density[i]);
+                cudaFree(this->xvel[i]);
+                cudaFree(this->yvel[i]);
+                cudaFree(this->speed2[i]);
+                cudaFree(this->curl[i]);
+                cudaFree(this->barrier[i]);
             }
-            delete this->n0;
-            delete this->nN;
-            delete this->nS;
-            delete this->nE;
-            delete this->nW;
-            delete this->nNW;
-            delete this->nNE;
-            delete this->nSW;
-            delete this->nSE;
-            delete this->density;
-            delete this->xvel;
-            delete this->yvel;
-            delete this->speed2;
-            delete this->curl;
-            delete this->barrier;
+            cudaFree(this->n0);
+            cudaFree(this->nN);
+            cudaFree(this->nS);
+            cudaFree(this->nE);
+            cudaFree(this->nW);
+            cudaFree(this->nNW);
+            cudaFree(this->nNE);
+            cudaFree(this->nSW);
+            cudaFree(this->nSE);
+            cudaFree(this->density);
+            cudaFree(this->xvel);
+            cudaFree(this->yvel);
+            cudaFree(this->speed2);
+            cudaFree(this->curl);
+            cudaFree(this->barrier);
         }
 
         void Simulation::init_fluid() const {
@@ -141,8 +143,8 @@ namespace boltzmann {
             speed2[y][x] = 0;
         }
 
-        void Simulation::collide() {
-#pragma omp parallel for
+        void Simulation::collide() const {
+            #pragma omp parallel for
             for (int y = 0; y < ydim; y++) {
                 for (int x = 0; x < xdim; x++) {
                     double n, one9thn, one36thn, vx, vy, vx2, vy2, vx3, vy3, vxvy2, v2, v215;
