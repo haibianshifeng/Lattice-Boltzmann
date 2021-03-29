@@ -8,6 +8,7 @@ int main() {
     constexpr uint32_t height = 500;
 
     sf::RenderWindow window({width, height}, "Boltzmann");
+    window.setFramerateLimit(60);
 
     boltzmann::core::Simulation simulation(width, height);
 

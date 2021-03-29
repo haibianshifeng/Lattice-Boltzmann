@@ -14,8 +14,7 @@ namespace boltzmann {
         private:
             sf::RenderWindow *render_window;
             boltzmann::core::Simulation * simulation;
-            sf::Vertex * speed_colors;
-            sf::Vertex * curl_colors;
+            sf::Vertex * pixels;
             sf::VertexBuffer vertex_buffer;
             int n_colors = 1200;
             sf::Color * colors;
