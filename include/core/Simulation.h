@@ -17,6 +17,7 @@ namespace boltzmann {
         public:
             int xdim;
             int ydim;
+
             double** n0;
             double** nN;
             double** nS;
@@ -26,14 +27,28 @@ namespace boltzmann {
             double** nNE;
             double** nSW;
             double** nSE;
-
             double** density;		
             double** xvel;
             double** yvel;			
             double** speed2;
             double** curl;
-
             bool** barrier;
+
+            double** n0_temp;
+            double** nN_temp;
+            double** nS_temp;
+            double** nE_temp;
+            double** nW_temp;
+            double** nNW_temp;
+            double** nNE_temp;
+            double** nSW_temp;
+            double** nSE_temp;
+            double** density_temp;
+            double** xvel_temp;
+            double** yvel_temp;
+            double** speed2_temp;
+            double** curl_temp;
+            bool** barrier_temp;
 
             const double four9ths = 4.0 / 9;
             const double one9th = 1.0 / 9;
