@@ -85,16 +85,6 @@ namespace boltzmann {
              */
             void setContrast(double contrast_);
 
-            /**
-             * Getter n_colors
-             */
-            int getNColors() const;
-
-            /**
-             * Setter n_colors
-             */
-            void setNColors(int nColors);
-
             bool isColorful() const;
 
             void setColorful(bool colorful_);

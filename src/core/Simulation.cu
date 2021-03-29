@@ -109,7 +109,6 @@ namespace boltzmann {
 
             cudaDeviceSynchronize();
 
-
             this->draw_barrier(0, 0);
 
             if(barrier_file_name.empty()) {
@@ -262,7 +261,6 @@ namespace boltzmann {
             xvel[y][x] = 0;
             yvel[y][x] = 0;
             speed2[y][x] = 0;
-
 
             n0_temp[y][x] = 0;
             nE_temp[y][x] = 0;

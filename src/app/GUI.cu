@@ -10,6 +10,9 @@ namespace boltzmann {
             // Allocate memory for OpenGL colors
             cudaMallocManaged(&pixels, sizeof(uint8_t *) * simulation->ydim);
 
+            // Allocate memory for rainbow colors spectrum
+            cudaMallocManaged(&colors, sizeof(sf::Color) * n_colors);
+
             /*
              * Initialize memory for OpenGL coordinates and colors
              */
@@ -31,7 +34,7 @@ namespace boltzmann {
             /*
              * Initialize rainbow color for the spectrum
              */
-            this->setNColors(this->getNColors());
+            this->setColorful(freaky_colors);
         }
 
         GUI::~GUI() {
@@ -155,20 +158,12 @@ namespace boltzmann {
             GUI::contrast = contrast_;
         }
 
-        int GUI::getNColors() const {
-            return n_colors;
+        bool GUI::isColorful() const {
+            return colorful;
         }
 
-        void GUI::setNColors(int nColors) {
-            this->n_colors = std::max(1000, nColors);
-            this->n_colors = std::min(1000000, this->n_colors);
-
-            if (this->colors) {
-                cudaFree(colors);
-            }
-
-            // Allocate memory for rainbow colors spectrum
-            cudaMallocManaged(&colors, sizeof(sf::Color) * n_colors);
+        void GUI::setColorful(bool colorful_) {
+            this->colorful = colorful_;
 
             if (this->colorful) {
                 for (int c = 0; c < n_colors; c++) {
@@ -183,15 +178,6 @@ namespace boltzmann {
                     colors[c] = boltzmann::utils::HSBtoRGB((float) h, (float) 1, (float)1);
                 }
             }
-        }
-
-        bool GUI::isColorful() const {
-            return colorful;
-        }
-
-        void GUI::setColorful(bool colorful_) {
-            GUI::colorful = colorful_;
-            this->setNColors(this->getNColors());
         }
     }
 }
