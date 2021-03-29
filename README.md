@@ -52,7 +52,7 @@ an excellent introduction into the topic.
   <img src="data/6.gif">
 </p>
 
-### Build the software
+## Build the software
 
 This software was tested on:
 - Linux Ubuntu 20.10
@@ -128,7 +128,15 @@ DOWN - Less omega (read the PDF to know what omega does)
 RIGHT MOUSE - Switch between tradition colors and non-traditional colors
 ```
 
-### References
+## Some notes and thoughts on the implementation
+- The original implementation was column-major, which is kind of weird (maybe I overseen some details?).
+  The current implementation was made row-major.
+- The implementation sometimes suffers on some numerical instability problems, which I fail to fix.
+- Even when OpenGL is quite awesome and low level, I would not want to use this library in the future anymore. At least 
+not in combination with SFML.
+- The CUDA scheduling is currently done not that effectively, hence height of the application can not be larger than 1024.
+
+## References
 
 <a id="1">[1]</a>
 https://physics.weber.edu/schroeder/javacourse/LatticeBoltzmann.pdf (2012).
