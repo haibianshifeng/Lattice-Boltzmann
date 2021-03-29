@@ -36,9 +36,7 @@ namespace boltzmann {
                     pixels[y * this->simulation->xdim + x].position = sf::Vector2f{static_cast<float>(x),
                                                                                    static_cast<float>(y)};
                     if(this->simulation->barrier[y][x]) {
-                        pixels[y * this->simulation->xdim + x].color.r = 125;
-                        pixels[y * this->simulation->xdim + x].color.g = 125;
-                        pixels[y * this->simulation->xdim + x].color.b = 125;
+                        pixels[y * this->simulation->xdim + x].color = sf::Color{125, 125, 125};
                     }
                 }
             }
