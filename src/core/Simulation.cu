@@ -2,7 +2,7 @@
 
 namespace boltzmann {
     namespace core {
-        Simulation::Simulation(int width_, int height_) : xdim(width_), ydim(height_) {
+        Simulation::Simulation(int width_, int height_, const std::string& barrier_file_name) : xdim(width_), ydim(height_) {
             if(height_ > 1024) {
                 THROW_EXCEPTION("Height can be maximal 1024.")
             }
@@ -109,22 +109,41 @@ namespace boltzmann {
 
             cudaDeviceSynchronize();
 
-            this->draw_circle(100, 100, 20);
-            this->draw_circle(100, 300, 20);
-            this->draw_circle(100, 500, 20);
-            this->draw_circle(100, 700, 20);
-            this->draw_circle(100, 900, 20);
+            if(barrier_file_name.empty()) {
+                this->draw_circle(100, 100, 20);
+                this->draw_circle(100, 300, 20);
+                this->draw_circle(100, 500, 20);
+                this->draw_circle(100, 700, 20);
+                this->draw_circle(100, 900, 20);
 
-            this->draw_circle(250, 200, 20);
-            this->draw_circle(250, 400, 20);
-            this->draw_circle(250, 600, 20);
-            this->draw_circle(250, 800, 20);
+                this->draw_circle(250, 200, 20);
+                this->draw_circle(250, 400, 20);
+                this->draw_circle(250, 600, 20);
+                this->draw_circle(250, 800, 20);
 
-            this->draw_circle(400, 100, 20);
-            this->draw_circle(400, 300, 20);
-            this->draw_circle(400, 500, 20);
-            this->draw_circle(400, 700, 20);
-            this->draw_circle(400, 900, 20);
+                this->draw_circle(400, 100, 20);
+                this->draw_circle(400, 300, 20);
+                this->draw_circle(400, 500, 20);
+                this->draw_circle(400, 700, 20);
+                this->draw_circle(400, 900, 20);
+            } else {
+                sf::Image barrier_mask;
+                if(!barrier_mask.loadFromFile(barrier_file_name)) {
+                    THROW_EXCEPTION("Can not load barrier file: " << barrier_file_name)
+                }
+                if(barrier_mask.getSize().x != this->xdim || barrier_mask.getSize().y != this->ydim) {
+                    THROW_EXCEPTION("Barrier mask has invalid size. Expected (" << this->ydim << "x" << this->xdim<< "). Got (" << barrier_mask.getSize().x << "x" << barrier_mask.getSize().y << ")")
+                }
+                for(uint32_t y = 0; y < barrier_mask.getSize().y; y++) {
+                    for(uint32_t x = 0; x < barrier_mask.getSize().x; x++) {
+                        sf::Color pixel = barrier_mask.getPixel(x, y);
+                        float gray_scale = ((float)pixel.r + (float)pixel.g + (float)pixel.b) / 3.0f;
+                        if(gray_scale > 125.0f) {
+                            this->draw_barrier(x, y);
+                        }
+                    }
+                }
+            }
 
             this->synchronize();
             cudaDeviceSynchronize();

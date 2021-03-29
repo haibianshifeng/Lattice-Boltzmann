@@ -20,6 +20,7 @@
 typedef struct cli_paramters {
     bool recording;
     bool freaky_colors;
+    std::string barrier_file_name;
 }CliParameters;
 
 int main(int argc, char ** argv) {
@@ -27,17 +28,20 @@ int main(int argc, char ** argv) {
      * Parsing command line arguments
      */
     CliParameters  cli_parameters{
-        .recording = true,
-        .freaky_colors = false
+        .recording = false,
+        .freaky_colors = false,
     };
     CLI::App app{"Lattice Boltzmann Simulation"};
-    app.add_flag("--recording",
+    app.add_flag("-r,--recording",
                  cli_parameters.recording,
                  "Record mode on. Default false.");
 
-    app.add_flag("--freaky",
+    app.add_flag("-f,--freaky",
                  cli_parameters.freaky_colors,
                  "Freaky colors on. Default false.");
+
+    app.add_option("-b,--barrier", cli_parameters.barrier_file_name, "A help string");
+
     CLI11_PARSE(app, argc, argv)
 
     /*
@@ -60,7 +64,7 @@ int main(int argc, char ** argv) {
     /*
      * Initialize project's specific objects
      */
-    boltzmann::core::Simulation simulation(width, height);
+    boltzmann::core::Simulation simulation(width, height, cli_parameters.barrier_file_name);
     boltzmann::app::GUI gui(&window, &simulation, cli_parameters.freaky_colors);
     boltzmann::app::Controller controller(&window, &gui, &simulation);
 

@@ -78,7 +78,7 @@ namespace boltzmann {
              * @param width_ Can be any size
              * @param height_ maximal 1024 since CUDA only allows us to use 1024 threads per block.
              */
-            Simulation(int width_, int height_);
+            Simulation(int width_, int height_, const std::string& barrier_file_name);
 
             /**
              * Destructor
