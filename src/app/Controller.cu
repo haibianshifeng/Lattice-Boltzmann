@@ -51,8 +51,9 @@ namespace boltzmann {
                             break;
                     }
                 }
-
-                if(recording_mode && rendering) {
+                if(recording_mode && !rendering) {
+                    continue;
+                } else  {
 
                     // We simulate four steps at once to make the simulation faster
                     // The number of simulation steps at one time should be even

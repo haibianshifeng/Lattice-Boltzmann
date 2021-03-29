@@ -15,13 +15,25 @@
 #include <app/Controller.h>
 #include <SFML/OpenGL.hpp>
 #include <app/GUI.h>
+#include <app/CLI11.hpp>
 
+typedef struct cli_paramters {
+    bool recording;
+}CliParameters;
 
 int main(int argc, char ** argv) {
-    bool recording_mode = false;
-    if(argc > 1 && strcmp(argv[1], "record") == 0) {
-        recording_mode = true;
-    }
+    CliParameters  cli_parameters;
+
+    CLI::App app{"Lattice Boltzmann Simulation"};
+
+    app.add_flag("--recording",
+                 cli_parameters.recording,
+                 "Record mode on. Default false.");
+
+    CLI11_PARSE(app, argc, argv)
+
+    std::cout << cli_parameters.recording << std::endl;
+
     /*
      * Initialize SFML objects for global usage
      */
@@ -49,5 +61,5 @@ int main(int argc, char ** argv) {
     /*
      * Start main loop
      */
-    controller.start(recording_mode);
+    controller.start(cli_parameters.recording);
 }
