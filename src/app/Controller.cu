@@ -17,6 +17,7 @@ namespace boltzmann {
                     }
                 }
 
+                cudaDeviceSynchronize();
                 for(int i = 0; i < 10; i++) {
                     boltzmann::utils::TimeIt collision_step("Collision step");
                     this->simulation->collide();
