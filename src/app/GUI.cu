@@ -12,11 +12,7 @@ namespace boltzmann {
             uint32_t y = threadIdx.x;
 
             if (y < ydim && x < xdim) {
-                if (barrier[y][x]) {
-                    pixels[y * xdim + x].color.r = 125;
-                    pixels[y * xdim + x].color.g = 125;
-                    pixels[y * xdim + x].color.b = 125;
-                } else {
+                if (!barrier[y][x]) {
                     auto colorIndex = min(n_colors - 1,
                                           (n_colors *
                                            (0.5f + curl[y][x] * contrast * 0.3f)));
@@ -39,13 +35,21 @@ namespace boltzmann {
                 for (int x = 0; x < this->simulation->xdim; x++) {
                     pixels[y * this->simulation->xdim + x].position = sf::Vector2f{static_cast<float>(x),
                                                                                    static_cast<float>(y)};
+                    if(this->simulation->barrier[y][x]) {
+                        pixels[y * this->simulation->xdim + x].color.r = 125;
+                        pixels[y * this->simulation->xdim + x].color.g = 125;
+                        pixels[y * this->simulation->xdim + x].color.b = 125;
+                    }
                 }
             }
 
             for (int c = 0; c < n_colors; c++) {
                 double h = (double)c / n_colors;
+                h += 3 * sin(4*M_PI*h);
                 colors[c] = HSBtoRGB((float) h, 0.75, 1);
             }
+
+
         }
 
         GUI::~GUI() {

@@ -129,6 +129,9 @@ namespace boltzmann {
 
             this->init_fluid();
             cudaDeviceSynchronize();
+
+            this->synchronize();
+            cudaDeviceSynchronize();
         }
 
         Simulation::~Simulation() {
