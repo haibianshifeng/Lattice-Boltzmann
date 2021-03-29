@@ -59,7 +59,7 @@ namespace boltzmann {
                 } else {
                     // We simulate four steps at once to make the simulation faster
                     // The number of simulation steps at one time should be even
-                    for (int i = 0; i < 4; i++) {
+                    for (int i = 0; i < 15; i++) {
                         boltzmann::utils::TimeIt collision_step("Collision step", verbose);
                         this->simulation->collide();
                         cudaDeviceSynchronize();
