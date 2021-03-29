@@ -88,6 +88,13 @@ namespace boltzmann {
             if (y >= 1 && y < ydim - 1 && x >= 1 && x < xdim - 1) {
                 curl[y][x] = (yvel[y][x + 1] - yvel[y][x - 1]) - (xvel[y + 1][x] - xvel[y - 1][x]);
             }
+            if(y >= 1 && y < ydim - 1 && x == 0) {
+                curl[y][0] = 2 * (yvel[y][1] - yvel[y][0]) - (xvel[y + 1][0] - xvel[y - 1][0]);
+            }
+            if(y >= 1 && y < ydim - 1 && x == xdim - 1){
+                curl[y][xdim - 1] =
+                        2 * (yvel[y][xdim - 1] - yvel[y][xdim - 2]) - (xvel[y + 1][xdim - 1] - xvel[y - 1][xdim - 1]);
+            }
         }
 
         __global__
