@@ -209,8 +209,8 @@ namespace boltzmann {
         }
 
         __global__ void
-        update_pixels(uint32_t ydim, uint32_t xdim, uint8_t **pixels, bool **barrier, double n_colors, double **curl,
-                      double contrast, sf::Color *colors) {
+        update_pixels_curl(uint32_t ydim, uint32_t xdim, uint8_t **pixels, bool **barrier, double n_colors, double **curl,
+                           double contrast, sf::Color *colors) {
             uint32_t x = blockIdx.x;
             uint32_t y = threadIdx.x;
 
@@ -219,6 +219,85 @@ namespace boltzmann {
                     auto colorIndex = min(n_colors - 1,
                                           (n_colors *
                                            (0.5f + curl[y][x] * contrast * 0.3f)));
+                    colorIndex = max(0.0f, colorIndex);
+                    colorIndex = min(n_colors - 1, colorIndex);
+                    pixels[y][3 * x] = colors[(uint32_t) colorIndex].r;
+                    pixels[y][3 * x + 1] = colors[(uint32_t) colorIndex].g;
+                    pixels[y][3 * x + 2] = colors[(uint32_t) colorIndex].b;
+                }
+            }
+        }
+
+        __global__ void
+        update_pixels_speed(uint32_t ydim, uint32_t xdim, uint8_t **pixels, bool **barrier, double n_colors,
+                            double **speed, double contrast, sf::Color *colors) {
+            uint32_t x = blockIdx.x;
+            uint32_t y = threadIdx.x;
+
+            if (y < ydim && x < xdim) {
+                if (!barrier[y][x]) {
+                    auto colorIndex = min(n_colors - 1,
+                                          (sqrt(speed[y][x]) * n_colors * contrast * 0.2));
+                    colorIndex = max(0.0f, colorIndex);
+                    colorIndex = min(n_colors - 1, colorIndex);
+                    pixels[y][3 * x] = colors[(uint32_t) colorIndex].r;
+                    pixels[y][3 * x + 1] = colors[(uint32_t) colorIndex].g;
+                    pixels[y][3 * x + 2] = colors[(uint32_t) colorIndex].b;
+                }
+            }
+        }
+
+        __global__ void
+        update_pixels_xvel(uint32_t ydim, uint32_t xdim, uint8_t **pixels, bool **barrier, double n_colors,
+                           double **xvel, double contrast, sf::Color *colors) {
+            uint32_t x = blockIdx.x;
+            uint32_t y = threadIdx.x;
+
+            if (y < ydim && x < xdim) {
+                if (!barrier[y][x]) {
+                    auto colorIndex = min(n_colors - 1,
+                                          (n_colors *
+                                           (0.5f + xvel[y][x] * contrast * 0.2f)));
+                    colorIndex = max(0.0f, colorIndex);
+                    colorIndex = min(n_colors - 1, colorIndex);
+                    pixels[y][3 * x] = colors[(uint32_t) colorIndex].r;
+                    pixels[y][3 * x + 1] = colors[(uint32_t) colorIndex].g;
+                    pixels[y][3 * x + 2] = colors[(uint32_t) colorIndex].b;
+                }
+            }
+        }
+
+        __global__ void
+        update_pixels_yvel(uint32_t ydim, uint32_t xdim, uint8_t **pixels, bool **barrier, double n_colors,
+                           double **yvel, double contrast, sf::Color *colors) {
+            uint32_t x = blockIdx.x;
+            uint32_t y = threadIdx.x;
+
+            if (y < ydim && x < xdim) {
+                if (!barrier[y][x]) {
+                    auto colorIndex = min(n_colors - 1,
+                                          (n_colors *
+                                           (0.5f + yvel[y][x] * contrast * 0.3f)));
+                    colorIndex = max(0.0f, colorIndex);
+                    colorIndex = min(n_colors - 1, colorIndex);
+                    pixels[y][3 * x] = colors[(uint32_t) colorIndex].r;
+                    pixels[y][3 * x + 1] = colors[(uint32_t) colorIndex].g;
+                    pixels[y][3 * x + 2] = colors[(uint32_t) colorIndex].b;
+                }
+            }
+        }
+
+        __global__ void
+        update_pixels_density(uint32_t ydim, uint32_t xdim, uint8_t **pixels, bool **barrier, double n_colors,
+                              double **density, double contrast, sf::Color *colors) {
+            uint32_t x = blockIdx.x;
+            uint32_t y = threadIdx.x;
+
+            if (y < ydim && x < xdim) {
+                if (!barrier[y][x]) {
+                    auto colorIndex = min(n_colors - 1,
+                                          (n_colors *
+                                           (0.5f + (density[y][x] - 1) * contrast * 0.5f)));
                     colorIndex = max(0.0f, colorIndex);
                     colorIndex = min(n_colors - 1, colorIndex);
                     pixels[y][3 * x] = colors[(uint32_t) colorIndex].r;

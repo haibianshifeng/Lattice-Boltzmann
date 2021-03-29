@@ -161,12 +161,44 @@ namespace boltzmann {
                          double v);
 
         /**
-         * Generate visual graphic from current world's state
+         * Generate visual graphic from current world's state depends on curl
          */
         __global__
         void
-        update_pixels(uint32_t ydim, uint32_t xdim, uint8_t **pixels, bool **barrier, double n_colors, double **curl,
-                      double contrast, sf::Color *colors);
+        update_pixels_curl(uint32_t ydim, uint32_t xdim, uint8_t **pixels, bool **barrier, double n_colors, double **curl,
+                           double contrast, sf::Color *colors);
+
+        /**
+         * Generate visual graphic from current world's state depends on speed
+         */
+        __global__
+        void
+        update_pixels_speed(uint32_t ydim, uint32_t xdim, uint8_t **pixels, bool **barrier, double n_colors, double **speed,
+                           double contrast, sf::Color *colors);
+
+        /**
+         * Generate visual graphic from current world's state depends on xvel
+         */
+        __global__
+        void
+        update_pixels_xvel(uint32_t ydim, uint32_t xdim, uint8_t **pixels, bool **barrier, double n_colors, double **xvel,
+                            double contrast, sf::Color *colors);
+
+        /**
+         * Generate visual graphic from current world's state depends on yvel
+         */
+        __global__
+        void
+        update_pixels_yvel(uint32_t ydim, uint32_t xdim, uint8_t **pixels, bool **barrier, double n_colors, double **yvel,
+                           double contrast, sf::Color *colors);
+
+        /**
+         * Generate visual graphic from current world's state depends on density
+         */
+        __global__
+        void
+        update_pixels_density(uint32_t ydim, uint32_t xdim, uint8_t **pixels, bool **barrier, double n_colors, double **density,
+                           double contrast, sf::Color *colors);
     }
 }
 

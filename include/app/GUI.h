@@ -23,13 +23,13 @@ namespace boltzmann {
             /*
              * How many individual colors do we want to have
              */
-            int n_colors = 12000;
+            int n_colors = 7500;
             sf::Color *colors;
 
             /*
              * Contrast factor
              */
-            double contrast = 400;
+            double contrast = 100;
 
             /*
              * Project's specific objects
@@ -60,8 +60,14 @@ namespace boltzmann {
 
             /**
              * Visualize current state of the world
+             *
+             * 0: Curl
+             * 1: speed
+             * 2: x velocity
+             * 3: y velocity
+             * 4: density
              */
-            void paint();
+            void paint(uint32_t mode);
         };
     }
 }

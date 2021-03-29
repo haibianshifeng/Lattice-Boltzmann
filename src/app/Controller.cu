@@ -6,12 +6,25 @@ namespace boltzmann {
                 render_window_), gui(gui_), simulation(simulation_) {}
 
         void Controller::start() {
+            uint32_t mode = 0;
             while (this->render_window->isOpen()) {
                 while (this->render_window->pollEvent(event)) {
                     switch (this->event.type) {
                         case sf::Event::Closed:
                             this->render_window->close();
                             break;
+                        case sf::Event::KeyReleased:
+                            if(this->event.key.code == sf::Keyboard::Num0) {
+                                mode = 0;
+                            } else if(this->event.key.code == sf::Keyboard::Num1) {
+                                mode = 1;
+                            } else if(this->event.key.code == sf::Keyboard::Num2) {
+                                mode = 2;
+                            } else if(this->event.key.code == sf::Keyboard::Num3) {
+                                mode = 3;
+                            }else if(this->event.key.code == sf::Keyboard::Num4) {
+                                mode = 4;
+                            }
                         default:
                             break;
                     }
@@ -53,7 +66,7 @@ namespace boltzmann {
 
                 // Render world's current state
                 boltzmann::utils::TimeIt rendering_step("Rendering step");
-                this->gui->paint();
+                this->gui->paint(mode);
                 rendering_step.end();
             }
         }

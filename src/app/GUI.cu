@@ -4,10 +4,19 @@ namespace boltzmann {
     namespace app {
         GUI::GUI(sf::Window *render_window_, boltzmann::core::Simulation *simulation_)
                 : render_window(render_window_), simulation(simulation_) {
+
+            // Allocate memory for OpenGL coordinates
             cudaMallocManaged(&coordinates, sizeof(float *) * simulation->ydim);
+
+            // Allocate memory for OpenGL colors
             cudaMallocManaged(&pixels, sizeof(uint8_t *) * simulation->ydim);
+
+            // Allocate memory for rainbow colors spectrum
             cudaMallocManaged(&colors, sizeof(sf::Color) * n_colors);
 
+            /*
+             * Initialize memory for OpenGL coordinates and colors
+             */
             for (int y = 0; y < this->simulation->ydim; y++) {
                 cudaMallocManaged(&coordinates[y], sizeof(float) * 2 * simulation->xdim);
                 cudaMallocManaged(&pixels[y], sizeof(uint8_t) * 3 * simulation->xdim);
@@ -16,16 +25,19 @@ namespace boltzmann {
                     coordinates[y][2 * x] = (float) x;
                     coordinates[y][2 * x + 1] = (float) y;
                     if (this->simulation->barrier[y][x]) {
-                        pixels[y][x * 3] = 125;
-                        pixels[y][x * 3 + 1] = 125;
-                        pixels[y][x * 3 + 2] = 125;
+                        pixels[y][x * 3] = 50;
+                        pixels[y][x * 3 + 1] = 50;
+                        pixels[y][x * 3 + 2] = 50;
                     }
                 }
             }
 
+            /*
+             * Initialize rainbow color for the spectrum
+             */
             for (int c = 0; c < n_colors; c++) {
                 double h = (double) c / n_colors;
-                h += 3 * sin(4 * M_PI * h);
+                h += 10 * sin(2 * M_PI * h);
                 colors[c] = HSBtoRGB((float) h, 0.75, 1);
             }
         }
@@ -40,8 +52,73 @@ namespace boltzmann {
             cudaFree(coordinates);
         }
 
-        void GUI::paint() {
-            boltzmann::core::update_pixels<<<simulation->xdim, simulation->ydim>>>(
+        void GUI::paint(uint32_t mode) {
+            /*
+             * Rendering the pixels
+             * 0: Curl
+             * 1: speed
+             * 2: x velocity
+             * 3: y velocity
+             * 4: density
+             */
+            switch(mode) {
+                case 0:
+                boltzmann::core::update_pixels_curl<<<simulation->xdim, simulation->ydim>>>(
+                        simulation->ydim,
+                                simulation->xdim,
+                                pixels,
+                                simulation->barrier,
+                                n_colors,
+                                simulation->curl,
+                                contrast,
+                                colors);
+                break;
+                case 1:
+                    boltzmann::core::update_pixels_speed<<<simulation->xdim, simulation->ydim>>>(
+                    simulation->ydim,
+                            simulation->xdim,
+                            pixels,
+                            simulation->barrier,
+                            n_colors,
+                            simulation->speed2,
+                            contrast,
+                            colors);
+                    break;
+                case 2:
+                    boltzmann::core::update_pixels_xvel<<<simulation->xdim, simulation->ydim>>>(
+                    simulation->ydim,
+                            simulation->xdim,
+                            pixels,
+                            simulation->barrier,
+                            n_colors,
+                            simulation->xvel,
+                            contrast,
+                            colors);
+                    break;
+                case 3:
+                    boltzmann::core::update_pixels_yvel<<<simulation->xdim, simulation->ydim>>>(
+                    simulation->ydim,
+                            simulation->xdim,
+                            pixels,
+                            simulation->barrier,
+                            n_colors,
+                            simulation->yvel,
+                            contrast,
+                            colors);
+                    break;
+                case 4:
+                    boltzmann::core::update_pixels_density<<<simulation->xdim, simulation->ydim>>>(
+                    simulation->ydim,
+                            simulation->xdim,
+                            pixels,
+                            simulation->barrier,
+                            n_colors,
+                            simulation->density,
+                            contrast,
+                            colors);
+                    break;
+                default:
+                    boltzmann::core::update_pixels_curl<<<simulation->xdim, simulation->ydim>>>(
                     simulation->ydim,
                             simulation->xdim,
                             pixels,
@@ -50,8 +127,12 @@ namespace boltzmann {
                             simulation->curl,
                             contrast,
                             colors);
+            }
             cudaDeviceSynchronize();
 
+            /*
+             * Plotting
+             */
             glClearColor(0, 0, 0, 0);
             glClear(GL_COLOR_BUFFER_BIT);
 
