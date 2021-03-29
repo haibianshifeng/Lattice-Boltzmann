@@ -12,9 +12,9 @@ namespace boltzmann {
 
             if (y < ydim && x < xdim) {
                 if (barrier[y][x]) {
-                    pixels[y * xdim + x].color.r = 255;
-                    pixels[y * xdim + x].color.g = 255;
-                    pixels[y * xdim + x].color.b = 255;
+                    pixels[y * xdim + x].color.r = 125;
+                    pixels[y * xdim + x].color.g = 125;
+                    pixels[y * xdim + x].color.b = 125;
                 } else {
                     auto colorIndex = min(n_colors - 1,
                                           (n_colors *

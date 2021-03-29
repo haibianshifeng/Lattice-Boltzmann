@@ -107,15 +107,15 @@ namespace boltzmann {
 
             cudaDeviceSynchronize();
 
-            this->draw_circle(50, 150, 20);
-            this->draw_circle(150, 200, 20);
-            this->draw_circle(50, 250, 20);
-            this->draw_circle(150, 300, 20);
-            this->draw_circle(50, 350, 20);
-
-
-            this->draw_square(300, 0,310, 300);
-            this->draw_square(350, 200,360, 499);
+            this->draw_circle(100, 100, 20);
+            this->draw_circle(250, 200, 20);
+            this->draw_circle(100, 300, 20);
+            this->draw_circle(250, 400, 20);
+            this->draw_circle(100, 500, 20);
+            this->draw_circle(250, 600, 20);
+            this->draw_circle(100, 700, 20);
+            this->draw_circle(250, 800, 20);
+            this->draw_circle(100, 900, 20);
             this->synchronize();
             cudaDeviceSynchronize();
 
@@ -314,7 +314,7 @@ namespace boltzmann {
 
         void Simulation::bounce() const {
             boltzmann::core::bounce<<<this->ydim, this->xdim>>>(
-                    xdim,
+                            xdim,
                             ydim,
                             barrier,
                             n0,
@@ -402,7 +402,13 @@ namespace boltzmann {
         }
 
         void Simulation::draw_square(int x1, int y1, int x2, int y2) const {
-
+            for (int y = 0; y < ydim; y++) {
+                for (int x = 0; x < xdim; x++) {
+                    if (x > x1 && y > y1 && x < x2 && y < y2) {
+                        draw_barrier(x, y);
+                    }
+                }
+            }
         }
     }
 }
