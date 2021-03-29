@@ -16,6 +16,10 @@
   <img src="data/4.gif">
 </p>
 
+<p align="center">
+  <img src="data/5.gif">
+</p>
+
 ### Build the software
 
 This software was tested on:
