@@ -4,15 +4,11 @@ namespace boltzmann {
     namespace app {
         GUI::GUI(sf::Window *render_window_, boltzmann::core::Simulation *simulation_)
                 : render_window(render_window_), simulation(simulation_) {
-
             // Allocate memory for OpenGL coordinates
             cudaMallocManaged(&coordinates, sizeof(float *) * simulation->ydim);
 
             // Allocate memory for OpenGL colors
             cudaMallocManaged(&pixels, sizeof(uint8_t *) * simulation->ydim);
-
-            // Allocate memory for rainbow colors spectrum
-            cudaMallocManaged(&colors, sizeof(sf::Color) * n_colors);
 
             /*
              * Initialize memory for OpenGL coordinates and colors
@@ -35,11 +31,7 @@ namespace boltzmann {
             /*
              * Initialize rainbow color for the spectrum
              */
-            for (int c = 0; c < n_colors; c++) {
-                double h = (double) c / n_colors;
-                h += 10 * sin(2 * M_PI * h);
-                colors[c] = HSBtoRGB((float) h, 0.75, 1);
-            }
+            this->setNColors(this->getNColors());
         }
 
         GUI::~GUI() {
@@ -153,6 +145,35 @@ namespace boltzmann {
             glFlush();
 
             render_window->display();
+        }
+
+        double GUI::getContrast() const {
+            return contrast;
+        }
+
+        void GUI::setContrast(double contrast_) {
+            GUI::contrast = contrast_;
+        }
+
+        int GUI::getNColors() const {
+            return n_colors;
+        }
+
+        void GUI::setNColors(int nColors) {
+            this->n_colors = std::max(1000, nColors);
+            this->n_colors = std::min(1000000, this->n_colors);
+            if(this->colors) {
+                cudaFree(colors);
+            }
+
+            // Allocate memory for rainbow colors spectrum
+            cudaMallocManaged(&colors, sizeof(sf::Color) * n_colors);
+
+            for (int c = 0; c < n_colors; c++) {
+                double h = (double) c / n_colors;
+                h += 10 * sin(2 * M_PI * h);
+                colors[c] = HSBtoRGB((float) h, 0.75, 1);
+            }
         }
     }
 }

@@ -13,17 +13,25 @@ namespace boltzmann {
                         case sf::Event::Closed:
                             this->render_window->close();
                             break;
-                        case sf::Event::KeyReleased:
-                            if(this->event.key.code == sf::Keyboard::Num0) {
+                        case sf::Event::KeyPressed:
+                            if (this->event.key.code == sf::Keyboard::Num0) {
                                 mode = 0;
-                            } else if(this->event.key.code == sf::Keyboard::Num1) {
+                            } else if (this->event.key.code == sf::Keyboard::Num1) {
                                 mode = 1;
-                            } else if(this->event.key.code == sf::Keyboard::Num2) {
+                            } else if (this->event.key.code == sf::Keyboard::Num2) {
                                 mode = 2;
-                            } else if(this->event.key.code == sf::Keyboard::Num3) {
+                            } else if (this->event.key.code == sf::Keyboard::Num3) {
                                 mode = 3;
-                            }else if(this->event.key.code == sf::Keyboard::Num4) {
+                            } else if (this->event.key.code == sf::Keyboard::Num4) {
                                 mode = 4;
+                            } else if (this->event.key.code == sf::Keyboard::Add) {
+                                this->gui->setContrast(this->gui->getContrast() + 100);
+                            } else if (this->event.key.code == sf::Keyboard::Subtract) {
+                                this->gui->setContrast(this->gui->getContrast() - 100);
+                            } else if(this->event.key.code == sf::Keyboard::J) {
+                                this->gui->setNColors(this->gui->getNColors() + 1000);
+                            } else if(this->event.key.code == sf::Keyboard::K) {
+                                this->gui->setNColors(this->gui->getNColors() - 1000);
                             }
                         default:
                             break;
@@ -32,7 +40,7 @@ namespace boltzmann {
 
                 // We simulate four steps at once to make the simulation faster
                 // The number of simulation steps at one time should be even
-                for(int i = 0; i < 4; i++) {
+                for (int i = 0; i < 4; i++) {
                     boltzmann::utils::TimeIt collision_step("Collision step");
                     this->simulation->collide();
                     cudaDeviceSynchronize();

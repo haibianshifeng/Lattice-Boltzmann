@@ -68,6 +68,20 @@ namespace boltzmann {
              * 4: density
              */
             void paint(uint32_t mode);
+
+            /**
+             * Getter for contrast
+             */
+            double getContrast() const;
+
+            /**
+             * Setter for contrast
+             */
+            void setContrast(double contrast_);
+
+            int getNColors() const;
+
+            void setNColors(int nColors);
         };
     }
 }
