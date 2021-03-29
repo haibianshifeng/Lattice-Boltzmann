@@ -3,6 +3,11 @@
 <p align="center">
   <img src="data/1.gif">
 </p>
+
+<p align="center">
+  <img src="data/2.gif">
+</p>
+
 ### Build the software
 
 This software was tested on:
