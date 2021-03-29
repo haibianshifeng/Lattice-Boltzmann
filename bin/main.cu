@@ -21,6 +21,8 @@ typedef struct cli_paramters {
     bool recording;
     bool freaky_colors;
     bool verbose;
+    uint32_t width;
+    uint32_t height;
     std::string barrier_file_name;
 }CliParameters;
 
@@ -31,7 +33,9 @@ int main(int argc, char ** argv) {
     CliParameters  cli_parameters{
         .recording = false,
         .freaky_colors = false,
-        .verbose = false
+        .verbose = false,
+        .width = 1000,
+        .height = 1000
     };
     CLI::App app{"Lattice Boltzmann Simulation"};
     app.add_flag("-r,--recording",
@@ -42,33 +46,32 @@ int main(int argc, char ** argv) {
                  cli_parameters.freaky_colors,
                  "Freaky colors on. Default false. If this flag is true, non-traditional colors will be used, else traditional colors.");
 
+    app.add_flag("-v,--verbose", cli_parameters.verbose, "Verbosity for benchmarking. Default false.");
+
     app.add_option("-b,--barrier", cli_parameters.barrier_file_name, "Path to png/jpeg/jpg images to import self-made barrier mask file. Darker areas of the image (average RGB less than 100) will be detected as barrier.");
 
-    app.add_flag("-v,--verbose", cli_parameters.verbose, "Verbosity for benchmarking. Default false.");
+    app.add_option("-x,--width", cli_parameters.width, "Width of the application. (Default 1000).");
+
+    app.add_option("-y,--height", cli_parameters.height, "Height of the application. (Default 1000). Should be at most 1000.");
 
     CLI11_PARSE(app, argc, argv)
 
-    /*
-     * Initialize SFML objects for global usage
-     */
-    constexpr uint32_t width = 1000;
-    constexpr uint32_t height = 1000;
-    sf::Window window(sf::VideoMode{width, height, 24}, "Boltzmann");
+    sf::Window window(sf::VideoMode{cli_parameters.width, cli_parameters.height, 24}, "Boltzmann");
     window.setFramerateLimit(60);
 
     /*
      * Initialize OpenGL
      */
-    glViewport(0, 0, width, height); // viewport definition
+    glViewport(0, 0, cli_parameters.width, cli_parameters.height); // viewport definition
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0, width, height, 0, -1, 1);
+    glOrtho(0, cli_parameters.width, cli_parameters.height, 0, -1, 1);
     glPointSize(1);
 
     /*
      * Initialize project's specific objects
      */
-    boltzmann::core::Simulation simulation(width, height, cli_parameters.barrier_file_name);
+    boltzmann::core::Simulation simulation(cli_parameters.width, cli_parameters.height, cli_parameters.barrier_file_name);
     boltzmann::app::GUI gui(&window, &simulation, cli_parameters.freaky_colors);
     boltzmann::app::Controller controller(&window, &gui, &simulation, cli_parameters.verbose);
 
