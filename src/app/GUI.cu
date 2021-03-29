@@ -7,8 +7,8 @@ namespace boltzmann {
         void
         update_pixels(uint32_t ydim, uint32_t xdim, sf::Vertex *pixels, bool **barrier, double n_colors, double **curl,
                       double contrast, sf::Color *colors) {
-            uint32_t y = blockIdx.x;
-            uint32_t x = threadIdx.x;
+            uint32_t x = blockIdx.x;
+            uint32_t y = threadIdx.x;
 
             if (y < ydim && x < xdim) {
                 if (barrier[y][x]) {
@@ -30,7 +30,7 @@ namespace boltzmann {
         GUI::GUI(sf::RenderWindow *render_window_, boltzmann::core::Simulation *simulation_)
                 : render_window(render_window_), simulation(simulation_) {
             pixels = new sf::Vertex[this->simulation->ydim * this->simulation->xdim];
-            vertex_buffer.create((uint64_t) (this->simulation->ydim * this->simulation->xdim));
+            vertex_buffer.create(this->simulation->ydim * this->simulation->xdim);
             cudaMallocManaged(&colors, sizeof(sf::Color) * n_colors);
             cudaMallocManaged(&pixels, sizeof(sf::Vertex) * this->simulation->ydim * this->simulation->xdim);
 
@@ -62,9 +62,15 @@ namespace boltzmann {
         }
 
         void GUI::paint() {
-            update_pixels<<<simulation->ydim, simulation->xdim>>>(simulation->ydim, simulation->xdim, pixels,
-                                                                  simulation->barrier, n_colors, simulation->curl,
-                                                                  contrast, colors);
+            update_pixels<<<simulation->xdim, simulation->ydim>>>(
+                    simulation->ydim,
+                    simulation->xdim,
+                    pixels,
+                    simulation->barrier,
+                    n_colors,
+                    simulation->curl,
+                    contrast,
+                    colors);
             cudaDeviceSynchronize();
             vertex_buffer.update(pixels);
             render_window->draw(vertex_buffer);

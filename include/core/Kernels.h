@@ -3,9 +3,9 @@
 
 namespace boltzmann {
     namespace core {
-        const double four9ths = 4.0 / 9;
-        const double one9th = 1.0 / 9;
-        const double one36th = 1.0 / 36;
+        const double four9ths = 4.0 / 9.0;
+        const double one9th = 1.0 / 9.0;
+        const double one36th = 1.0 / 36.0;
 
         __global__
         void collide(uint32_t xdim, uint32_t ydim,
@@ -37,8 +37,8 @@ namespace boltzmann {
                      double **yvel_temp,
                      double **speed2_temp,
                      double omega) {
-            uint32_t y = blockIdx.x;
-            uint32_t x = threadIdx.x;
+            uint32_t x = blockIdx.x;
+            uint32_t y = threadIdx.x;
 
             if (y < ydim && x < xdim) {
                 double n, one9thn, one36thn, vx, vy, vx2, vy2, vx3, vy3, vxvy2, v2, v215;
@@ -129,8 +129,8 @@ namespace boltzmann {
                     double omega,
                     double v) {
 
-            uint32_t y = blockIdx.x;
-            uint32_t x = threadIdx.x;
+            uint32_t x = blockIdx.x;
+            uint32_t y = threadIdx.x;
 
             if (y > 0 && y <= ydim - 1 && x >= 0 && x < xdim - 1) {
                 nN[y][x] = nN_temp[y - 1][x];
@@ -224,8 +224,9 @@ namespace boltzmann {
                     double omega,
                     double v) {
 
-            uint32_t y = blockIdx.x;
-            uint32_t x = threadIdx.x;
+            uint32_t x = blockIdx.x;
+            uint32_t y = threadIdx.x;
+
             if (y < ydim && x < xdim && barrier[y][x]) {
                 if (nN[y][x] > 0) {
                     nS[y - 1][x] += nN_temp[y][x];
@@ -295,8 +296,8 @@ namespace boltzmann {
                          double omega,
                          double v) {
 
-            uint32_t y = blockIdx.x;
-            uint32_t x = threadIdx.x;
+            uint32_t x = blockIdx.x;
+            uint32_t y = threadIdx.x;
 
             density_temp[y][x] = density[y][x];
             xvel_temp[y][x] = xvel[y][x];

@@ -244,7 +244,7 @@ namespace boltzmann {
         }
 
         void Simulation::collide() const {
-            boltzmann::core::collide<<<this->ydim, this->xdim>>>(
+            boltzmann::core::collide<<<this->xdim,this->ydim>>>(
                     xdim,
                             ydim,
                             barrier,
@@ -278,7 +278,7 @@ namespace boltzmann {
         }
 
         void Simulation::stream() const {
-            boltzmann::core::stream<<<this->ydim, this->xdim>>>(
+            boltzmann::core::stream<<<this->xdim, this->ydim>>>(
                     xdim,
                             ydim,
                             barrier,
@@ -313,7 +313,7 @@ namespace boltzmann {
         }
 
         void Simulation::bounce() const {
-            boltzmann::core::bounce<<<this->ydim, this->xdim>>>(
+            boltzmann::core::bounce<<<this->xdim,this->ydim>>>(
                             xdim,
                             ydim,
                             barrier,
@@ -348,7 +348,7 @@ namespace boltzmann {
         }
 
         void Simulation::compute_curl() const {
-            boltzmann::core::compute_curl<<<this->ydim, this->xdim>>>(xdim, ydim, curl, yvel, xvel);
+            boltzmann::core::compute_curl<<<this->xdim, this->ydim>>>(xdim, ydim, curl, yvel, xvel);
         }
 
         void Simulation::draw_barrier(int x, int y) const {
@@ -367,7 +367,7 @@ namespace boltzmann {
         }
 
         void Simulation::synchronize() const {
-            boltzmann::core::synchronize<<<this->ydim, this->xdim>>>(
+            boltzmann::core::synchronize<<<this->xdim, this->ydim>>>(
                     xdim,
                             ydim,
                             barrier,
@@ -401,14 +401,11 @@ namespace boltzmann {
                             v);
         }
 
-        void Simulation::draw_square(int x1, int y1, int x2, int y2) const {
+        void Simulation::debug_information() {
             for (int y = 0; y < ydim; y++) {
-                for (int x = 0; x < xdim; x++) {
-                    if (x > x1 && y > y1 && x < x2 && y < y2) {
-                        draw_barrier(x, y);
-                    }
-                }
+                printf("%f ", this->speed2[y][500]);
             }
+            printf("\n");
         }
     }
 }
