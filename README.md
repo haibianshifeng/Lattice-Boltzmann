@@ -14,14 +14,16 @@ Usage: ./boltzmann [OPTIONS]
 Options:
   -h,--help                   Print this help message and exit
   
-  -r,--recording              Record mode on. Default false. If this flag is true, left mouse click on the window 
+  -r,--recording              Record mode on. Default false. If this flag is true, 
+                              left mouse click on the window 
                               is needed to start the simulation.
                               
-  -f,--freaky                 Freaky colors on. Default false. If this flag is true, non-traditional colors 
-                              will be used, else traditional colors.
+  -f,--freaky                 Freaky colors on. Default false. If this flag is true, 
+                              non-traditional colors will be used, else traditional colors.
                               
-  -b,--barrier TEXT           Path to png/jpeg/jpg images to import self-made barrier mask file. Darker areas of 
-                              the image (average RGB less than 100) will be detected as barrier.
+  -b,--barrier TEXT           Path to png/jpeg/jpg images to import self-made barrier mask file. 
+                              Darker areas of the image (average RGB less than 100) will be 
+                              detected as barrier.
                               
   -v,--verbose                Verbosity for benchmarking. Default false.
 ```
