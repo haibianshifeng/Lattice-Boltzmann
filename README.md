@@ -1,7 +1,7 @@
 # Lattice Boltzmann simulation
 
 <p align="center">
-  <img width="460" height="300" src="data/1.gif">
+  <img src="data/1.gif">
 </p>
 ### Build the software
 
