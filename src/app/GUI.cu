@@ -3,28 +3,6 @@
 
 namespace boltzmann {
     namespace app {
-
-        __global__
-        void update_pixels(uint32_t ydim, uint32_t xdim, sf::Vertex * pixels, bool ** barrier, uint32_t n_colors, double **curl, double contrast, sf::Color * colors) {
-            uint32_t y = blockIdx.x;
-            uint32_t x = threadIdx.x;
-
-            if(y < ydim && x < xdim) {
-                if (barrier[y][x]) {
-                    pixels[y * xdim + x].color.r = 255;
-                    pixels[y * xdim + x].color.g = 255;
-                    pixels[y * xdim + x].color.b = 255;
-                } else {
-                    auto colorIndex = min(n_colors - 1,
-                                          (int) (n_colors *
-                                                 (0.5 + curl[y][x] * contrast * 0.3)));
-                    colorIndex = max(0, colorIndex);
-                    colorIndex = min(n_colors - 1, colorIndex);
-                    pixels[y * xdim + x].color = colors[colorIndex];
-                }
-            }
-        }
-
         GUI::GUI(sf::RenderWindow *render_window_, boltzmann::core::Simulation *simulation_)
                 : render_window(render_window_), simulation(simulation_) {
             pixels = new sf::Vertex[this->simulation->ydim * this->simulation->xdim];
@@ -32,10 +10,9 @@ namespace boltzmann {
             cudaMallocManaged(&colors, sizeof(sf::Color) * n_colors);
             cudaMallocManaged(&pixels, sizeof(sf::Vertex) * this->simulation->ydim * this->simulation->xdim);
 
-            int i = 0;
             for (int y = 0; y < this->simulation->ydim; y++) {
                 for (int x = 0; x < this->simulation->xdim; x++) {
-                    pixels[i++].position = sf::Vector2f{static_cast<float>(x), static_cast<float>(y)};
+                    pixels[y * this->simulation->xdim + x].position = sf::Vector2f{static_cast<float>(x), static_cast<float>(y)};
                 }
             }
 
@@ -63,8 +40,20 @@ namespace boltzmann {
         }
 
         void GUI::paint() {
-            update_pixels<<<simulation->ydim, simulation->xdim>>>(simulation->ydim, simulation->xdim, pixels, simulation->barrier, n_colors, simulation->curl, contrast, colors);
-            cudaDeviceSynchronize();
+            #pragma omp parallel for
+            for (int y = 0; y < this->simulation->ydim; y++) {
+                for (int x = 0; x < this->simulation->xdim; x++) {
+                    if (this->simulation->barrier[y][x]) {
+                        this->pixels[y * simulation->xdim + x].color = {255, 255, 255};
+                    } else {
+                        auto colorIndex = std::min(this->n_colors - 1,
+                                                   (int) (n_colors * (0.5 + this->simulation->curl[y][x] * contrast * 0.3)));
+                        colorIndex = std::max(0, colorIndex);
+                        colorIndex = std::min(n_colors - 1, colorIndex);
+                        this->pixels[y * simulation->xdim + x].color = this->colors[colorIndex];
+                    }
+                }
+            }
             vertex_buffer.update(pixels);
             render_window->draw(vertex_buffer);
             render_window->display();
