@@ -410,12 +410,5 @@ namespace boltzmann {
                             omega,
                             v);
         }
-
-        void Simulation::debug_information() {
-            for (int y = 0; y < ydim; y++) {
-                printf("%f ", this->speed2[y][500]);
-            }
-            printf("\n");
-        }
     }
 }

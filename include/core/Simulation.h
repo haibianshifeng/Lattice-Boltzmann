@@ -51,7 +51,7 @@ namespace boltzmann {
             double** curl_temp;
             bool** barrier_temp;
 
-            double v = 0.1;
+            double v = 0.15;
             double omega = 1 / (3 * 0.1 + 0.5);
 
             void init_fluid() const;
@@ -75,8 +75,6 @@ namespace boltzmann {
             void compute_curl() const;
 
             void synchronize() const;
-
-            void debug_information();
         };
     }
 }
