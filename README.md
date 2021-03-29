@@ -1,5 +1,19 @@
 # Lattice Boltzmann simulation
 
+"...the **go to** statement should be abolished..." .
+
+Inspired by the original work of https://physics.weber.edu/schroeder/javacourse/LatticeBoltzmann.pdf
+
+The Lattice Boltzmann is a simple and relatively young method of Computational fluid dynamics. In contrast to traditional 
+computational fluid dynamics (CFD) approaches based on the conservation of macroscopic quantities like mass, momentum, and energy, 
+the Lattice Boltzmann method (LBM) models the fluid by the kinetics of discrete particles that propagate (streaming step) 
+and collide (relaxation step) on a discrete lattice mesh. Due to its particular nature, LBM has several advantages, 
+such as dealing with complex boundaries, incorporating microscopic interactions, and parallelization of the algorithm.[[1]](#1)
+
+This project hence aims to demonstrate the easy-to-parallelize property of the algorithm and exploits the graphical processing unit (GPU) 
+for computing and rendering purpose. 
+
+
 ### Now you have seen a beautiful cow in water
 
 <p align="center">
@@ -102,3 +116,9 @@ UP - Greater omega (read the PDF to know what omega does)
 DOWN - Less omega (read the PDF to know what omega does)
 RIGHT MOUSE - Switch between tradition colors and non-traditional colors
 ```
+
+### References
+
+<a id="1">[1]</a>
+https://www-m2.ma.tum.de/bin/view/Allgemeines/MA5344SS17 (1968).
+Lattice Boltzmann methods (MA5344) - Technical University München.
