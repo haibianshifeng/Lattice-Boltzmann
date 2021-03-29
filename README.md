@@ -1,12 +1,18 @@
 # Lattice Boltzmann simulation
 
+### Now you have seen a beautiful cow in water
+
 <p align="center">
   <img src="data/1.gif">
 </p>
 
+### Swimming circles
+
 <p align="center">
   <img src="data/7.gif">
 </p>
+
+### Some self-made structures
 
 <p align="center">
   <img src="data/3.gif">
@@ -14,10 +20,6 @@
 
 <p align="center">
   <img src="data/4.gif">
-</p>
-
-<p align="center">
-  <img src="data/5.gif">
 </p>
 
 <p align="center">
