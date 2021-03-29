@@ -3,6 +3,11 @@
 
 namespace boltzmann {
     namespace core {
+
+        const double four9ths = 4.0 / 9;
+        const double one9th = 1.0 / 9;
+        const double one36th = 1.0 / 36;
+
         __global__
         void collide(uint32_t xdim, uint32_t ydim,
                      bool **barrier,
@@ -36,17 +41,13 @@ namespace boltzmann {
             uint32_t y = blockIdx.x;
             uint32_t x = threadIdx.x;
 
-            const double four9ths = 4.0 / 9;
-            const double one9th = 1.0 / 9;
-            const double one36th = 1.0 / 36;
-
             if (y < ydim && x < xdim) {
                 double n, one9thn, one36thn, vx, vy, vx2, vy2, vx3, vy3, vxvy2, v2, v215;
                 if (!barrier[y][x]) {
                     n = n0[y][x] + nN[y][x] + nS[y][x] + nE[y][x] + nW[y][x] + nNW[y][x] + nNE[y][x] + nSW[y][x] +
                         nSE[y][x];
-                    one9thn = 1.0 / 9.0 * n;
-                    one36thn = 1.0 / 36.0 * n;
+                    one9thn = one9th * n;
+                    one36thn = one36th * n;
                     if (n > 0) {
                         vx = (nE[y][x] + nNE[y][x] + nSE[y][x] - nW[y][x] - nNW[y][x] - nSW[y][x]) / n;
                         vy = (nN[y][x] + nNE[y][x] + nNW[y][x] - nS[y][x] - nSE[y][x] - nSW[y][x]) / n;
@@ -121,11 +122,6 @@ namespace boltzmann {
                     double **speed2_temp,
                     double omega,
                     double v) {
-
-
-            const double four9ths = 4.0 / 9;
-            const double one9th = 1.0 / 9;
-            const double one36th = 1.0 / 36;
 
             uint32_t y = blockIdx.x;
             uint32_t x = threadIdx.x;
