@@ -1,6 +1,10 @@
 # Lattice Boltzmann simulation
 
-"...the **go to** statement should be abolished..." .
+> I am conscious of being only an individual struggling weakly against the stream of time.
+> But it still remains in my power to contribute in such a way that, when the theory of gases is revived, not too much
+> will have to be rediscovered
+> 
+> -- <cite>[Ludwid Boltzmann (*1844 in Wien, ✟ in Duino bei Triest)]</cite>
 
 Inspired by the original work of https://physics.weber.edu/schroeder/javacourse/LatticeBoltzmann.pdf
 
@@ -11,7 +15,9 @@ and collide (relaxation step) on a discrete lattice mesh. Due to its particular 
 such as dealing with complex boundaries, incorporating microscopic interactions, and parallelization of the algorithm.[[1]](#1)
 
 This project hence aims to demonstrate the easy-to-parallelize property of the algorithm and exploits the graphical processing unit (GPU) 
-for computing and rendering purpose. 
+for computing and rendering purpose.  
+
+
 
 
 ### Now you have seen a beautiful cow in water
@@ -44,9 +50,8 @@ for computing and rendering purpose.
 
 This software was tested on:
 - Linux Ubuntu 20.10
-- NVIDIA 460.39 with CUDA 11.2
-- SFML 2.5
-- OpenGL 4.6.0
+- NVIDIA 460.39 with CUDA 11.2 for computing purpose.
+- OpenGL 4.6.0 for rendering purpose.
 
 Install dependencies 
 
