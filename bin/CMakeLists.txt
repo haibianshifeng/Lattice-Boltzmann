@@ -1,8 +1,8 @@
-add_executable(main main.cu)
+add_executable(boltzmann main.cu)
 
-target_link_libraries(main PUBLIC ${PROJECT_NAME} ${LIBRARY})
+target_link_libraries(boltzmann PUBLIC ${PROJECT_NAME} ${LIBRARY})
 
 set_target_properties(
-        main
+        boltzmann
         PROPERTIES
         CUDA_SEPARABLE_COMPILATION ON)

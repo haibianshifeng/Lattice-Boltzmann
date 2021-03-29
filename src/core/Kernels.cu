@@ -149,7 +149,7 @@ namespace boltzmann {
             uint32_t x = blockIdx.x;
             uint32_t y = threadIdx.x;
 
-            if(x < xdim && y < ydim && x > 0 && y > 0) {
+            if(x < xdim && y < ydim && x > 0 && y > 0 && x < xdim - 1 && y < ydim - 1) {
                 if (y < ydim && x < xdim && barrier[y][x]) {
                     if (nN[y][x] > 0) {
                         nS[y - 1][x] += nN_temp[y][x];

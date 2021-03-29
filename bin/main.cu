@@ -36,15 +36,15 @@ int main(int argc, char ** argv) {
     CLI::App app{"Lattice Boltzmann Simulation"};
     app.add_flag("-r,--recording",
                  cli_parameters.recording,
-                 "Record mode on. Default false.");
+                 "Record mode on. Default false. If this flag is true, left mouse click on the window is needed to start the simulation.");
 
     app.add_flag("-f,--freaky",
                  cli_parameters.freaky_colors,
-                 "Freaky colors on. Default false.");
+                 "Freaky colors on. Default false. If this flag is true, non-traditional colors will be used, else traditional colors.");
 
-    app.add_option("-b,--barrier", cli_parameters.barrier_file_name, "Import self-made barrier mask file.");
+    app.add_option("-b,--barrier", cli_parameters.barrier_file_name, "Path to png/jpeg/jpg images to import self-made barrier mask file. Darker areas of the image (average RGB less than 100) will be detected as barrier.");
 
-    app.add_flag("-v,--verbose", cli_parameters.verbose, "Verbosity. Default false.");
+    app.add_flag("-v,--verbose", cli_parameters.verbose, "Verbosity for benchmarking. Default false.");
 
     CLI11_PARSE(app, argc, argv)
 
