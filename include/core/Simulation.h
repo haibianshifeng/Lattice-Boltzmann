@@ -77,6 +77,8 @@ namespace boltzmann {
             void compute_curl() const;
 
             void synchronize() const;
+
+            void draw_square(int x1, int y1, int x2, int y2) const;
         };
     }
 }
