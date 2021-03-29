@@ -109,8 +109,6 @@ namespace boltzmann {
 
             cudaDeviceSynchronize();
 
-            this->draw_barrier(0, 0);
-
             if(barrier_file_name.empty()) {
                 this->draw_circle(100, 100, 20);
                 this->draw_circle(100, 300, 20);
@@ -136,8 +134,8 @@ namespace boltzmann {
                 if(barrier_mask.getSize().x != this->xdim || barrier_mask.getSize().y != this->ydim) {
                     THROW_EXCEPTION("Barrier mask has invalid size. Expected (" << this->ydim << "x" << this->xdim<< "). Got (" << barrier_mask.getSize().x << "x" << barrier_mask.getSize().y << ")")
                 }
-                for(uint32_t y = 0; y < ydim; y++) {
-                    for(uint32_t x = 0; x < xdim; x++) {
+                for(uint32_t y = 1; y < ydim - 1; y++) {
+                    for(uint32_t x = 1; x < xdim - 1; x++) {
                         sf::Color pixel = barrier_mask.getPixel(x, y);
                         float gray_scale = ((float)pixel.r + (float)pixel.g + (float)pixel.b) / 3.0f;
                         if(gray_scale < 125.0f) {
@@ -146,6 +144,7 @@ namespace boltzmann {
                     }
                 }
             }
+            cudaDeviceSynchronize();
 
             this->synchronize();
             cudaDeviceSynchronize();

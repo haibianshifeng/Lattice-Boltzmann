@@ -7,8 +7,8 @@
 #include <iostream>
 #include <memory>
 #include "core/Simulation.h"
-#include "utils/TimeIt.h"
 #include "GUI.h"
+#include "utils/TimeIt.h"
 
 namespace boltzmann {
     namespace app {
@@ -28,6 +28,7 @@ namespace boltzmann {
              */
             boltzmann::app::GUI *gui;
             boltzmann::core::Simulation * simulation;
+            bool verbose;
         public:
 
             /**
@@ -37,7 +38,7 @@ namespace boltzmann {
              * @param gui_ GUI object
              * @param simulation_ simulation object
              */
-            Controller(sf::Window *render_window_, GUI *gui_, core::Simulation *simulation_);
+            Controller(sf::Window *render_window_, GUI *gui_, core::Simulation *simulation_, bool verbose_);
 
             /**
              * Main loop

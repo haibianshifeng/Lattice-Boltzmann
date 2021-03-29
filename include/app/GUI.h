@@ -11,7 +11,7 @@
 #include "core/Simulation.h"
 #include "utils/Colors.h"
 #include "core/Kernels.h"
-#include "utils/Measurement.h"
+#include "utils/TimeIt.h"
 
 namespace boltzmann {
     namespace app {

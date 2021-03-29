@@ -20,6 +20,7 @@
 typedef struct cli_paramters {
     bool recording;
     bool freaky_colors;
+    bool verbose;
     std::string barrier_file_name;
 }CliParameters;
 
@@ -30,6 +31,7 @@ int main(int argc, char ** argv) {
     CliParameters  cli_parameters{
         .recording = false,
         .freaky_colors = false,
+        .verbose = false
     };
     CLI::App app{"Lattice Boltzmann Simulation"};
     app.add_flag("-r,--recording",
@@ -40,7 +42,9 @@ int main(int argc, char ** argv) {
                  cli_parameters.freaky_colors,
                  "Freaky colors on. Default false.");
 
-    app.add_option("-b,--barrier", cli_parameters.barrier_file_name, "A help string");
+    app.add_option("-b,--barrier", cli_parameters.barrier_file_name, "Import self-made barrier mask file.");
+
+    app.add_flag("-v,--verbose", cli_parameters.verbose, "Verbosity. Default false.");
 
     CLI11_PARSE(app, argc, argv)
 
@@ -66,7 +70,7 @@ int main(int argc, char ** argv) {
      */
     boltzmann::core::Simulation simulation(width, height, cli_parameters.barrier_file_name);
     boltzmann::app::GUI gui(&window, &simulation, cli_parameters.freaky_colors);
-    boltzmann::app::Controller controller(&window, &gui, &simulation);
+    boltzmann::app::Controller controller(&window, &gui, &simulation, cli_parameters.verbose);
 
     /*
      * Start main loop
