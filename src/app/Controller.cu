@@ -32,6 +32,10 @@ namespace boltzmann {
                                 this->gui->setNColors(this->gui->getNColors() + 1000);
                             } else if(this->event.key.code == sf::Keyboard::K) {
                                 this->gui->setNColors(this->gui->getNColors() - 1000);
+                            } else if(this->event.key.code == sf::Keyboard::Up) {
+                                this->simulation->setOmega(this->simulation->getOmega() + 0.001);
+                            } else if(this->event.key.code == sf::Keyboard::Down) {
+                                this->simulation->setOmega(this->simulation->getOmega() - 0.001);
                             }
                         default:
                             break;

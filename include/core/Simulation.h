@@ -70,7 +70,7 @@ namespace boltzmann {
              * Speed of particle and omega factor (functionality can be looked at in the PDF included in the repository)
              */
             double v = 0.15;
-            double omega = 1 / (3 * 0.1 + 0.5);
+            double omega = 0.05;
 
             /**
              * Constructor of class
@@ -133,6 +133,10 @@ namespace boltzmann {
              * Synchronize temporary buffer with main buffer
              */
             void synchronize() const;
+
+            double getOmega() const;
+
+            void setOmega(double omega);
         };
     }
 }

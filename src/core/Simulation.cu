@@ -287,7 +287,7 @@ namespace boltzmann {
                             xvel_temp,
                             yvel_temp,
                             speed2_temp,
-                            omega);
+                            1 / (3 * this->omega + 0.5));
         }
 
         void Simulation::stream() const {
@@ -321,7 +321,7 @@ namespace boltzmann {
                             xvel_temp,
                             yvel_temp,
                             speed2_temp,
-                            omega,
+                            1 / (3 * this->omega + 0.5),
                             v);
         }
 
@@ -356,7 +356,7 @@ namespace boltzmann {
                             xvel_temp,
                             yvel_temp,
                             speed2_temp,
-                            omega,
+                                    1 / (3 * this->omega + 0.5),
                             v);
         }
 
@@ -410,8 +410,16 @@ namespace boltzmann {
                             xvel_temp,
                             yvel_temp,
                             speed2_temp,
-                            omega,
+                            1 / (3 * this->omega + 0.5),
                             v);
+        }
+
+        double Simulation::getOmega() const {
+            return omega;
+        }
+
+        void Simulation::setOmega(double omega) {
+            Simulation::omega = omega;
         }
     }
 }
