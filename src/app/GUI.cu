@@ -1,5 +1,6 @@
 #include "core/Simulation.h"
 #include "app/GUI.h"
+#include "utils/Colors.h"
 
 namespace boltzmann {
     namespace app {
@@ -41,18 +42,10 @@ namespace boltzmann {
                 }
             }
 
-            sf::Color start_color{0, 0, 0};
-            sf::Color end_color{255, 255, 255};
             for (int c = 0; c < n_colors; c++) {
-                double percent = (double) c / (double) n_colors;
-
-                auto r = (uint8_t) ((double) start_color.r + percent * ((double) end_color.r - (double) start_color.r));
-
-                auto g = (uint8_t) ((double) start_color.g + percent * ((double) end_color.g - (double) start_color.g));
-
-                auto b = (uint8_t) ((double) start_color.b + percent * ((double) end_color.b - (double) start_color.b));
-
-                colors[c] = sf::Color{r, g, b};
+                double h = (2.0 / 3) * (1 - c * 1.0 / n_colors);
+                h += 0.03 * sin(6 * M_PI * h);
+                colors[c] = HSBtoRGB((float) h, 1, 1);
             }
         }
 

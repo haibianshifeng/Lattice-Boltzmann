@@ -50,11 +50,8 @@ namespace boltzmann {
             double** curl_temp;
             bool** barrier_temp;
 
-            const double four9ths = 4.0 / 9;
-            const double one9th = 1.0 / 9;
-            const double one36th = 1.0 / 36;
             double v = 0.1;
-            double omega = 1.78;
+            double omega = 1 / (3 * 0.1 + 0.5);
 
             void init_fluid() const;
 
