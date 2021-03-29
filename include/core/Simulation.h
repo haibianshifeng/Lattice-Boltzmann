@@ -75,6 +75,8 @@ namespace boltzmann {
             void draw_circle(int x_center, int y_center, int radius) const;
 
             void compute_curl() const;
+
+            void synchronize() const;
         };
     }
 }
