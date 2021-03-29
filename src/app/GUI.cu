@@ -1,4 +1,4 @@
-#include <core/Simulation.h>
+#include "core/Simulation.h"
 #include "app/GUI.h"
 
 boltzmann::app::GUI::GUI(sf::RenderWindow *render_window_, boltzmann::core::Simulation *simulation_)
