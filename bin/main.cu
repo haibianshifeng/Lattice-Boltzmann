@@ -17,7 +17,11 @@
 #include <app/GUI.h>
 
 
-int main() {
+int main(int argc, char ** argv) {
+    bool recording_mode = false;
+    if(argc > 1 && strcmp(argv[1], "record") == 0) {
+        recording_mode = true;
+    }
     /*
      * Initialize SFML objects for global usage
      */
@@ -45,5 +49,5 @@ int main() {
     /*
      * Start main loop
      */
-    controller.start();
+    controller.start(recording_mode);
 }

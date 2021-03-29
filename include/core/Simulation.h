@@ -69,8 +69,8 @@ namespace boltzmann {
             /*
              * Speed of particle and omega factor (functionality can be looked at in the PDF included in the repository)
              */
-            double v = 0.15;
-            double omega = 0.05;
+            double v = 0.1;
+            double omega = 0.1;
 
             /**
              * Constructor of class

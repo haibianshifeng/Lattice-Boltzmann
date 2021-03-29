@@ -42,7 +42,7 @@ namespace boltzmann {
             /**
              * Main loop
              */
-            void start();
+            void start(bool recording_mode);
         };
     }
 }
