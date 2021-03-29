@@ -88,10 +88,10 @@ namespace boltzmann {
             if (y >= 1 && y < ydim - 1 && x >= 1 && x < xdim - 1) {
                 curl[y][x] = (yvel[y][x + 1] - yvel[y][x - 1]) - (xvel[y + 1][x] - xvel[y - 1][x]);
             }
-            if(y >= 1 && y < ydim - 1 && x == 0) {
+            if (y >= 1 && y < ydim - 1 && x == 0) {
                 curl[y][0] = 2 * (yvel[y][1] - yvel[y][0]) - (xvel[y + 1][0] - xvel[y - 1][0]);
             }
-            if(y >= 1 && y < ydim - 1 && x == xdim - 1){
+            if (y >= 1 && y < ydim - 1 && x == xdim - 1) {
                 curl[y][xdim - 1] =
                         2 * (yvel[y][xdim - 1] - yvel[y][xdim - 2]) - (xvel[y + 1][xdim - 1] - xvel[y - 1][xdim - 1]);
             }
@@ -161,6 +161,14 @@ namespace boltzmann {
                 nNE[y][0] = one36th * (1 + 3 * v + 3 * v * v);
                 nSE[y][0] = one36th * (1 + 3 * v + 3 * v * v);
             }
+
+            if (y >= 0 && y < ydim && !barrier[y][0] && x == xdim - 1) {
+                nW[y][xdim - 1] = one9th * (1 - 3 * v + 3 * v * v);
+                nNW[y][xdim - 1] = one36th * (1 - 3 * v + 3 * v * v);
+                nSW[y][xdim - 1] = one36th * (1 - 3 * v + 3 * v * v);
+            }
+
+
             if (y == 0 && x >= 0 && x < xdim) {
                 n0[0][x] = four9ths * (1 - 1.5 * v * v);
                 nE[0][x] = one9th * (1 + 3 * v + 3 * v * v);
@@ -219,7 +227,7 @@ namespace boltzmann {
 
             uint32_t y = blockIdx.x;
             uint32_t x = threadIdx.x;
-            if(y < ydim && x < xdim && barrier[y][x]) {
+            if (y < ydim && x < xdim && barrier[y][x]) {
                 if (nN[y][x] > 0) {
                     nS[y - 1][x] += nN_temp[y][x];
                     nN[y][x] = 0;
