@@ -21,20 +21,23 @@ namespace boltzmann {
                     boltzmann::utils::TimeIt collision_step("Collision step");
                     this->simulation->collide();
                     collision_step.end();
+                    cudaDeviceSynchronize();
 
                     boltzmann::utils::TimeIt stream_step("Stream step");
                     this->simulation->stream();
                     stream_step.end();
 
-                    boltzmann::utils::TimeIt simulation_step("Bouncing step");
+                    boltzmann::utils::TimeIt bouncing_step("Bouncing step");
                     this->simulation->bounce();
-                    simulation_step.end();
+                    bouncing_step.end();
                 }
 
 
                 boltzmann::utils::TimeIt curl_step("Curl step");
                 this->simulation->compute_curl();
                 curl_step.end();
+
+                cudaDeviceSynchronize();
 
                 boltzmann::utils::TimeIt rendering_step("Rendering step");
                 this->gui->paint();
