@@ -1,7 +1,7 @@
 /**
     A lattice-Boltzmann simulation in CUDA
 
-	Credits:
+	Full Credit goes to the creator of the exercises:
     2011-2013, Daniel V. Schroeder (Weber State University)
 	The "wind tunnel" entry/exit conditions are inspired by Graham Pullan's code (http://www.many-core.group.cam.ac.uk/projects/LBdemo.shtml).
     Additional inspiration from Thomas Pohl's applet (http://thomas-pohl.info/work/lba.html).
