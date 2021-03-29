@@ -7,6 +7,10 @@
 #include <iostream>
 #include <memory>
 #include "utils/Exception.h"
+#include "core/Simulation.h"
+#include "utils/Colors.h"
+#include "core/Kernels.h"
+#include "utils/Measurement.h"
 
 namespace boltzmann {
     namespace app {
@@ -19,6 +23,9 @@ namespace boltzmann {
             int n_colors = 12000;
             sf::Color * colors;
             double contrast = 400;
+            boltzmann::utils::FPS fps_measurement{};
+            sf::Font font;
+            void draw_fps();
         public:
             GUI(sf::RenderWindow *render_window_, core::Simulation *simulation_);
 

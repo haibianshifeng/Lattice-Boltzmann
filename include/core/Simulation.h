@@ -10,6 +10,7 @@
 #include <cstring>
 
 #include "utils/Exception.h"
+#include "core/Kernels.h"
 
 namespace boltzmann {
     namespace core {

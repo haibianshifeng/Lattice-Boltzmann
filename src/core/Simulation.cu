@@ -1,5 +1,4 @@
 #include "core/Simulation.h"
-#include "core/Kernels.h"
 
 namespace boltzmann {
     namespace core {
