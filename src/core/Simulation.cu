@@ -56,7 +56,7 @@ namespace boltzmann {
                 cudaMallocManaged(&this->yvel[i], sizeof(double) * xdim);
                 cudaMallocManaged(&this->speed2[i], sizeof(double) * xdim);
                 cudaMallocManaged(&this->curl[i], sizeof(double) * xdim);
-                cudaMallocManaged(&this->barrier[i], sizeof(barrier) * xdim);
+                cudaMallocManaged(&this->barrier[i], sizeof(bool) * xdim);
 
                 cudaMallocManaged(&this->n0_temp[i], sizeof(double) * xdim);
                 cudaMallocManaged(&this->nN_temp[i], sizeof(double) * xdim);
@@ -72,7 +72,7 @@ namespace boltzmann {
                 cudaMallocManaged(&this->yvel_temp[i], sizeof(double) * xdim);
                 cudaMallocManaged(&this->speed2_temp[i], sizeof(double) * xdim);
                 cudaMallocManaged(&this->curl_temp[i], sizeof(double) * xdim);
-                cudaMallocManaged(&this->barrier_temp[i], sizeof(barrier) * xdim);
+                cudaMallocManaged(&this->barrier_temp[i], sizeof(bool) * xdim);
 
                 cudaMemset(this->n0[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
                 cudaMemset(this->nN[i], 0, static_cast<unsigned long>(this->xdim) * sizeof(double));
@@ -109,6 +109,9 @@ namespace boltzmann {
 
             cudaDeviceSynchronize();
 
+
+            this->draw_barrier(0, 0);
+
             if(barrier_file_name.empty()) {
                 this->draw_circle(100, 100, 20);
                 this->draw_circle(100, 300, 20);
@@ -134,11 +137,11 @@ namespace boltzmann {
                 if(barrier_mask.getSize().x != this->xdim || barrier_mask.getSize().y != this->ydim) {
                     THROW_EXCEPTION("Barrier mask has invalid size. Expected (" << this->ydim << "x" << this->xdim<< "). Got (" << barrier_mask.getSize().x << "x" << barrier_mask.getSize().y << ")")
                 }
-                for(uint32_t y = 0; y < barrier_mask.getSize().y; y++) {
-                    for(uint32_t x = 0; x < barrier_mask.getSize().x; x++) {
+                for(uint32_t y = 0; y < ydim; y++) {
+                    for(uint32_t x = 0; x < xdim; x++) {
                         sf::Color pixel = barrier_mask.getPixel(x, y);
                         float gray_scale = ((float)pixel.r + (float)pixel.g + (float)pixel.b) / 3.0f;
-                        if(gray_scale > 125.0f) {
+                        if(gray_scale < 125.0f) {
                             this->draw_barrier(x, y);
                         }
                     }
