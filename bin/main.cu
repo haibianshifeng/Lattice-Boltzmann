@@ -4,8 +4,8 @@
 
 
 int main() {
-    constexpr uint32_t width = 500;
-    constexpr uint32_t height = 500;
+    constexpr uint32_t width = 1000;
+    constexpr uint32_t height = 1000;
 
     sf::RenderWindow window({width, height}, "Boltzmann");
     window.setFramerateLimit(60);

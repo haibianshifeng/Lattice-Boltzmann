@@ -16,7 +16,7 @@ namespace boltzmann {
             boltzmann::core::Simulation * simulation;
             sf::Vertex * pixels;
             sf::VertexBuffer vertex_buffer;
-            int n_colors = 1200;
+            int n_colors = 12000;
             sf::Color * colors;
             double contrast = 400;
         public:
