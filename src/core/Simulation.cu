@@ -213,42 +213,41 @@ namespace boltzmann {
                     double **speed2_temp,
                     double omega,
                     double v) {
-            for (int y = 0; y < ydim; y++) {
-                for (int x = 0; x < xdim; x++) {
-                    if (barrier[y][x]) {
-                        if (nN[y][x] > 0) {
-                            nS[y - 1][x] += nN[y][x];
-                            nN[y][x] = 0;
-                        }
-                        if (nS[y][x] > 0) {
-                            nN[y + 1][x] += nS[y][x];
-                            nS[y][x] = 0;
-                        }
-                        if (nE[y][x] > 0) {
-                            nW[y][x - 1] += nE[y][x];
-                            nE[y][x] = 0;
-                        }
-                        if (nW[y][x] > 0) {
-                            nE[y][x + 1] += nW[y][x];
-                            nW[y][x] = 0;
-                        }
-                        if (nNW[y][x] > 0) {
-                            nSE[y - 1][x + 1] += nNW[y][x];
-                            nNW[y][x] = 0;
-                        }
-                        if (nNE[y][x] > 0) {
-                            nSW[y - 1][x - 1] += nNE[y][x];
-                            nNE[y][x] = 0;
-                        }
-                        if (nSW[y][x] > 0) {
-                            nNE[y + 1][x + 1] += nSW[y][x];
-                            nSW[y][x] = 0;
-                        }
-                        if (nSE[y][x] > 0) {
-                            nNW[y + 1][x - 1] += nSE[y][x];
-                            nSE[y][x] = 0;
-                        }
-                    }
+
+            uint32_t y = blockIdx.x;
+            uint32_t x = threadIdx.x;
+            if(y < ydim && x < xdim && barrier[y][x]) {
+                if (nN[y][x] > 0) {
+                    nS[y - 1][x] += nN_temp[y][x];
+                    nN[y][x] = 0;
+                }
+                if (nS[y][x] > 0) {
+                    nN[y + 1][x] += nS_temp[y][x];
+                    nS[y][x] = 0;
+                }
+                if (nE[y][x] > 0) {
+                    nW[y][x - 1] += nE_temp[y][x];
+                    nE[y][x] = 0;
+                }
+                if (nW[y][x] > 0) {
+                    nE[y][x + 1] += nW_temp[y][x];
+                    nW[y][x] = 0;
+                }
+                if (nNW[y][x] > 0) {
+                    nSE[y - 1][x + 1] += nNW_temp[y][x];
+                    nNW[y][x] = 0;
+                }
+                if (nNE[y][x] > 0) {
+                    nSW[y - 1][x - 1] += nNE_temp[y][x];
+                    nNE[y][x] = 0;
+                }
+                if (nSW[y][x] > 0) {
+                    nNE[y + 1][x + 1] += nSW_temp[y][x];
+                    nSW[y][x] = 0;
+                }
+                if (nSE[y][x] > 0) {
+                    nNW[y + 1][x - 1] += nSE_temp[y][x];
+                    nSE[y][x] = 0;
                 }
             }
         }
@@ -303,6 +302,7 @@ namespace boltzmann {
             nSE_temp[y][x] = nSE[y][x];
             nSW_temp[y][x] = nSW[y][x];
         }
+
 
         Simulation::Simulation(int width_, int height_) : xdim(width_), ydim(height_) {
             this->xdim = width_;
@@ -609,44 +609,38 @@ namespace boltzmann {
         }
 
         void Simulation::bounce() const {
-            for (int y = 0; y < ydim; y++) {
-                for (int x = 0; x < xdim; x++) {
-                    if (barrier[y][x]) {
-                        if (nN[y][x] > 0) {
-                            nS[y - 1][x] += nN[y][x];
-                            nN[y][x] = 0;
-                        }
-                        if (nS[y][x] > 0) {
-                            nN[y + 1][x] += nS[y][x];
-                            nS[y][x] = 0;
-                        }
-                        if (nE[y][x] > 0) {
-                            nW[y][x - 1] += nE[y][x];
-                            nE[y][x] = 0;
-                        }
-                        if (nW[y][x] > 0) {
-                            nE[y][x + 1] += nW[y][x];
-                            nW[y][x] = 0;
-                        }
-                        if (nNW[y][x] > 0) {
-                            nSE[y - 1][x + 1] += nNW[y][x];
-                            nNW[y][x] = 0;
-                        }
-                        if (nNE[y][x] > 0) {
-                            nSW[y - 1][x - 1] += nNE[y][x];
-                            nNE[y][x] = 0;
-                        }
-                        if (nSW[y][x] > 0) {
-                            nNE[y + 1][x + 1] += nSW[y][x];
-                            nSW[y][x] = 0;
-                        }
-                        if (nSE[y][x] > 0) {
-                            nNW[y + 1][x - 1] += nSE[y][x];
-                            nSE[y][x] = 0;
-                        }
-                    }
-                }
-            }
+            boltzmann::core::bounce<<<this->ydim, this->xdim>>>(
+                    xdim,
+                            ydim,
+                            barrier,
+                            n0,
+                            nN,
+                            nS,
+                            nE,
+                            nW,
+                            nNW,
+                            nNE,
+                            nSW,
+                            nSE,
+                            density,
+                            xvel,
+                            yvel,
+                            speed2,
+                            n0_temp,
+                            nN_temp,
+                            nS_temp,
+                            nE_temp,
+                            nW_temp,
+                            nNW_temp,
+                            nNE_temp,
+                            nSW_temp,
+                            nSE_temp,
+                            density_temp,
+                            xvel_temp,
+                            yvel_temp,
+                            speed2_temp,
+                            omega,
+                            v);
         }
 
         void Simulation::compute_curl() const {

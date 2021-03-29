@@ -20,18 +20,18 @@ namespace boltzmann {
                 for(int i = 0; i < 10; i++) {
                     boltzmann::utils::TimeIt collision_step("Collision step");
                     this->simulation->collide();
-                    collision_step.end();
                     cudaDeviceSynchronize();
+                    collision_step.end();
 
                     boltzmann::utils::TimeIt synchronize_step("Synchronization step 1");
                     this->simulation->synchronize();
-                    synchronize_step.end();
                     cudaDeviceSynchronize();
+                    synchronize_step.end();
 
                     boltzmann::utils::TimeIt stream_step("Stream step");
                     this->simulation->stream();
-                    stream_step.end();
                     cudaDeviceSynchronize();
+                    stream_step.end();
 
                     boltzmann::utils::TimeIt synchronize_step1("Synchronization step 2");
                     this->simulation->synchronize();
@@ -39,6 +39,7 @@ namespace boltzmann {
 
                     boltzmann::utils::TimeIt bouncing_step("Bouncing step");
                     this->simulation->bounce();
+                    cudaDeviceSynchronize();
                     bouncing_step.end();
                 }
 
