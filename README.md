@@ -15,12 +15,11 @@ and collide (relaxation step) on a discrete lattice mesh. Due to its particular 
 such as dealing with complex boundaries, incorporating microscopic interactions, and parallelization of the algorithm.[[1]](#1)
 
 This project hence aims to demonstrate the easy-to-parallelize property of the algorithm and exploits the graphical processing unit (GPU) 
-for computing and rendering purpose.  
+for computing and rendering purpose.
 
+## Some results
 
-
-
-### Now you have seen a beautiful cow in water
+### Have you ever seen a beautiful cow in water?
 
 <p align="center">
   <img src="data/1.gif">
