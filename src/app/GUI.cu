@@ -46,8 +46,8 @@ namespace boltzmann {
                     contrast,
                     colors);
             cudaDeviceSynchronize();
-            vertex_buffer.update(pixels);
-            render_window->draw(vertex_buffer);
+            //vertex_buffer.update(pixels);
+            //render_window->draw(vertex_buffer);
             this->draw_fps();
             render_window->display();
 

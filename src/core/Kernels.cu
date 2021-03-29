@@ -211,7 +211,6 @@ namespace boltzmann {
         __global__ void
         update_pixels(uint32_t ydim, uint32_t xdim, sf::Vertex *pixels, bool **barrier, double n_colors, double **curl,
                       double contrast, sf::Color *colors) {
-
             uint32_t x = blockIdx.x;
             uint32_t y = threadIdx.x;
 

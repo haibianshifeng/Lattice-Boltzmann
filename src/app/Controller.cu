@@ -52,7 +52,6 @@ namespace boltzmann {
 
                 boltzmann::utils::TimeIt rendering_step("Rendering step");
                 this->gui->paint();
-                cudaDeviceSynchronize();
                 rendering_step.end();
             }
         }
