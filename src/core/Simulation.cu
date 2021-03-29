@@ -36,6 +36,10 @@ namespace boltzmann {
             uint32_t y = blockIdx.x;
             uint32_t x = threadIdx.x;
 
+            const double four9ths = 4.0 / 9;
+            const double one9th = 1.0 / 9;
+            const double one36th = 1.0 / 36;
+
             if (y < ydim && x < xdim) {
                 double n, one9thn, one36thn, vx, vy, vx2, vy2, vx3, vy3, vxvy2, v2, v215;
                 if (!barrier[y][x]) {
@@ -62,7 +66,7 @@ namespace boltzmann {
                     xvel[y][x] = vx;
                     yvel[y][x] = vy;
                     speed2[y][x] = v2;
-                    n0[y][x] += omega * (4.0 / 9.0 * n * (1 - v215) - n0[y][x]);
+                    n0[y][x] += omega * (four9ths * n * (1 - v215) - n0[y][x]);
                     nE[y][x] += omega * (one9thn * (1 + vx3 + 4.5 * vx2 - v215) - nE[y][x]);
                     nW[y][x] += omega * (one9thn * (1 - vx3 + 4.5 * vx2 - v215) - nW[y][x]);
                     nN[y][x] += omega * (one9thn * (1 + vy3 + 4.5 * vy2 - v215) - nN[y][x]);
@@ -96,6 +100,99 @@ namespace boltzmann {
             uint32_t x = threadIdx.x;
             if (y >= 1 && y < ydim - 1 && x >= 1 && x < xdim - 1) {
                 curl[y][x] = (yvel[y][x + 1] - yvel[y][x - 1]) - (xvel[y + 1][x] - xvel[y - 1][x]);
+            }
+        }
+
+        __global__
+        void stream(uint32_t xdim,
+                    uint32_t ydim,
+                    bool **barrier,
+                    double **n0,
+                    double **nN,
+                    double **nS,
+                    double **nE,
+                    double **nW,
+                    double **nNW,
+                    double **nNE,
+                    double **nSW,
+                    double **nSE,
+                    double **density,
+                    double **xvel,
+                    double **yvel,
+                    double **speed2,
+                    double **n0_temp,
+                    double **nN_temp,
+                    double **nS_temp,
+                    double **nE_temp,
+                    double **nW_temp,
+                    double **nNW_temp,
+                    double **nNE_temp,
+                    double **nSW_temp,
+                    double **nSE_temp,
+                    double **density_temp,
+                    double **xvel_temp,
+                    double **yvel_temp,
+                    double **speed2_temp,
+                    double omega,
+                    double v) {
+
+
+            const double four9ths = 4.0 / 9;
+            const double one9th = 1.0 / 9;
+            const double one36th = 1.0 / 36;
+
+            uint32_t y = blockIdx.x;
+            uint32_t x = threadIdx.x;
+
+            if(y > 0 && y <= ydim - 1 && x >= 0 && x < xdim - 1) {
+                nN[y][x] = nN_temp[y - 1][x];
+                nNW[y][x] = nNW_temp[y - 1][x + 1];
+            }
+            if(y > 0 && y <= ydim - 1 && x > 0 && x <= xdim - 1) {
+                nE[y][x] = nE_temp[y][x - 1];
+                nNE[y][x] = nNE_temp[y - 1][x - 1];
+            }
+            if(y >= 0 && y < ydim - 1 && x > 0 && x <= xdim - 1) {
+                nS[y][x] = nS_temp[y + 1][x];
+                nSE[y][x] = nSE_temp[y + 1][x - 1];
+            }
+            if(y >= 0 && y < ydim - 1 && x >= 0 && x < xdim - 1) {
+                nW[y][x] = nW_temp[y][x + 1];
+                nSW[y][x] = nSW_temp[y + 1][x + 1];
+            }
+            if(y >= 0 && y < ydim - 1 && x == 0) {
+
+                nS[y][0] = nS_temp[y + 1][0];
+            }
+            if(y <= ydim - 1 && y > 0 && x == xdim - 1) {
+                nN[y][xdim - 1] = nN_temp[y - 1][xdim - 1];
+            }
+            if(y >= 0 && y < ydim && x == 0 && !barrier[y][x]) {
+
+                nE[y][0] = one9th * (1 + 3 * v + 3 * v * v);
+                nNE[y][0] = one36th * (1 + 3 * v + 3 * v * v);
+                nSE[y][0] = one36th * (1 + 3 * v + 3 * v * v);
+            }
+            if(y == 0 && x >= 0 && x < xdim)     {
+                n0[0][x] = four9ths * (1 - 1.5 * v * v);
+                nE[0][x] = one9th * (1 + 3 * v + 3 * v * v);
+                nW[0][x] = one9th * (1 - 3 * v + 3 * v * v);
+                nN[0][x] = one9th * (1 - 1.5 * v * v);
+                nS[0][x] = one9th * (1 - 1.5 * v * v);
+                nNE[0][x] = one36th * (1 + 3 * v + 3 * v * v);
+                nSE[0][x] = one36th * (1 + 3 * v + 3 * v * v);
+                nNW[0][x] = one36th * (1 - 3 * v + 3 * v * v);
+                nSW[0][x] = one36th * (1 - 3 * v + 3 * v * v);
+
+                n0[ydim - 1][x] = four9ths * (1 - 1.5 * v * v);
+                nE[ydim - 1][x] = one9th * (1 + 3 * v + 3 * v * v);
+                nW[ydim - 1][x] = one9th * (1 - 3 * v + 3 * v * v);
+                nN[ydim - 1][x] = one9th * (1 - 1.5 * v * v);
+                nS[ydim - 1][x] = one9th * (1 - 1.5 * v * v);
+                nNE[ydim - 1][x] = one36th * (1 + 3 * v + 3 * v * v);
+                nSE[ydim - 1][x] = one36th * (1 + 3 * v + 3 * v * v);
+                nNW[ydim - 1][x] = one36th * (1 - 3 * v + 3 * v * v);
+                nSW[ydim - 1][x] = one36th * (1 - 3 * v + 3 * v * v);
             }
         }
 
@@ -369,78 +466,38 @@ namespace boltzmann {
         }
 
         void Simulation::stream() const {
-            for (int y = ydim - 1; y > 0; y--) {
-                for (int x = 0; x < xdim - 1; x++) {        // first start in NW corner...
-                    nN[y][x] = nN[y - 1][x];        // move the north-moving particles
-                    nNW[y][x] = nNW[y - 1][x + 1];    // and the northwest-moving particles
-                }
-            }
-            for (int y = ydim - 1; y > 0; y--) {
-                for (int x = xdim - 1; x > 0; x--) {        // now start in NE corner...
-                    nE[y][x] = nE[y][x - 1];        // move the east-moving particles
-                    nNE[y][x] = nNE[y - 1][x - 1];    // and the northeast-moving particles
-                }
-            }
-            for (int y = 0; y < ydim - 1; y++) {
-                for (int x = xdim - 1; x > 0; x--) {        // now start in SE corner...
-                    nS[y][x] = nS[y + 1][x];        // move the south-moving particles
-                    nSE[y][x] = nSE[y + 1][x - 1];    // and the southeast-moving particles
-                }
-            }
-            for (int y = 0; y < ydim - 1; y++) {
-                for (int x = 0; x < xdim - 1; x++) {        // now start in the SW corner...
-                    nW[y][x] = nW[y][x + 1];        // move the west-moving particles
-                    nSW[y][x] = nSW[y + 1][x + 1];    // and the southwest-moving particles
-                }
-            }
-
-            // We missed a few at the left and right edges:
-            for (int y = 0; y < ydim - 1; y++) {
-                nS[y][0] = nS[y + 1][0];
-            }
-            for (int y = ydim - 1; y > 0; y--) {
-                nN[y][xdim - 1] = nN[y - 1][xdim - 1];
-            }
-
-            // Stream particles in from the non-existent space to the left
-            for (int y = 0; y < ydim; y++) {
-                if (!barrier[y][0]) {
-                    nE[y][0] = one9th * (1 + 3 * v + 3 * v * v);
-                    nNE[y][0] = one36th * (1 + 3 * v + 3 * v * v);
-                    nSE[y][0] = one36th * (1 + 3 * v + 3 * v * v);
-                }
-            }
-
-            for (int y = 0; y < ydim; y++) {
-                if (!barrier[y][0]) {
-                    nW[y][xdim - 1] = one9th * (1 - 3 * v + 3 * v * v);
-                    nNW[y][xdim - 1] = one36th * (1 - 3 * v + 3 * v * v);
-                    nSW[y][xdim - 1] = one36th * (1 - 3 * v + 3 * v * v);
-                }
-            }
-
-            // Now handle top and bottom edges:
-            for (int x = 0; x < xdim; x++) {
-                n0[0][x] = four9ths * (1 - 1.5 * v * v);
-                nE[0][x] = one9th * (1 + 3 * v + 3 * v * v);
-                nW[0][x] = one9th * (1 - 3 * v + 3 * v * v);
-                nN[0][x] = one9th * (1 - 1.5 * v * v);
-                nS[0][x] = one9th * (1 - 1.5 * v * v);
-                nNE[0][x] = one36th * (1 + 3 * v + 3 * v * v);
-                nSE[0][x] = one36th * (1 + 3 * v + 3 * v * v);
-                nNW[0][x] = one36th * (1 - 3 * v + 3 * v * v);
-                nSW[0][x] = one36th * (1 - 3 * v + 3 * v * v);
-
-                n0[ydim - 1][x] = four9ths * (1 - 1.5 * v * v);
-                nE[ydim - 1][x] = one9th * (1 + 3 * v + 3 * v * v);
-                nW[ydim - 1][x] = one9th * (1 - 3 * v + 3 * v * v);
-                nN[ydim - 1][x] = one9th * (1 - 1.5 * v * v);
-                nS[ydim - 1][x] = one9th * (1 - 1.5 * v * v);
-                nNE[ydim - 1][x] = one36th * (1 + 3 * v + 3 * v * v);
-                nSE[ydim - 1][x] = one36th * (1 + 3 * v + 3 * v * v);
-                nNW[ydim - 1][x] = one36th * (1 - 3 * v + 3 * v * v);
-                nSW[ydim - 1][x] = one36th * (1 - 3 * v + 3 * v * v);
-            }
+            boltzmann::core::stream<<<this->ydim, this->xdim>>>(
+                    xdim,
+                            ydim,
+                            barrier,
+                            n0,
+                            nN,
+                            nS,
+                            nE,
+                            nW,
+                            nNW,
+                            nNE,
+                            nSW,
+                            nSE,
+                            density,
+                            xvel,
+                            yvel,
+                            speed2,
+                            n0_temp,
+                            nN_temp,
+                            nS_temp,
+                            nE_temp,
+                            nW_temp,
+                            nNW_temp,
+                            nNE_temp,
+                            nSW_temp,
+                            nSE_temp,
+                            density_temp,
+                            xvel_temp,
+                            yvel_temp,
+                            speed2_temp,
+                            omega,
+                            v);
         }
 
         void Simulation::bounce() const {
