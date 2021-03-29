@@ -17,18 +17,18 @@ namespace boltzmann {
             std::chrono::steady_clock::time_point start_time;
             static uint32_t recursion_level;
             static bool closed_last_line;
-            bool closed_last_line_bkp{};
         public:
             /**
              * Constructor
              * @param text name of the benchmark
              */
-            explicit TimeIt(const std::string &text);
+            explicit TimeIt(std::string text, bool verbose);
+
 
             /**
              * End the benchmark and print the result
              */
-            void end();
+            void end(bool verbose);
 
             static std::string format_number(uint64_t number);
 

@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "utils/TimeIt.h"
 
 namespace boltzmann {
@@ -13,37 +15,41 @@ namespace boltzmann {
             return res;
         }
 
-        TimeIt::TimeIt(const std::string &text) {
-            this->start_time = std::chrono::steady_clock::now();
+        TimeIt::TimeIt(std::string text, bool verbose){
+            if(verbose ) {
+                this->start_time = std::chrono::steady_clock::now();
 
-            if (!TimeIt::closed_last_line)
-                std::cout << std::endl;
-            TimeIt::indent();
-            std::cout << pad_to(text, 75 - TimeIt::recursion_level * 2) << "  ";
+                if (!TimeIt::closed_last_line)
+                    std::cout << std::endl;
+                TimeIt::indent();
+                std::cout << pad_to(text, 75 - TimeIt::recursion_level * 2) << "  ";
 
-            TimeIt::recursion_level++;
-            TimeIt::closed_last_line = false;
+                TimeIt::recursion_level++;
+                TimeIt::closed_last_line = false;
+            }
         }
 
-        void TimeIt::end() {
-            auto end_time = std::chrono::steady_clock::now();
+        void TimeIt::end(bool verbose) {
+            if(verbose) {
+                auto end_time = std::chrono::steady_clock::now();
 
-            TimeIt::recursion_level--;
+                TimeIt::recursion_level--;
 
-            auto diff = end_time - this->start_time;
+                auto diff = end_time - this->start_time;
 
-            if (TimeIt::closed_last_line) {
-                TimeIt::indent();
+                if (TimeIt::closed_last_line) {
+                    TimeIt::indent();
 
-                std::cout << pad_to("- ", 75 - TimeIt::recursion_level * 2) << "  ";
+                    std::cout << pad_to("- ", 75 - TimeIt::recursion_level * 2) << "  ";
+                }
+                std::cout << "Done after "
+                          << TimeIt::format_number(
+                                  static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::microseconds>(
+                                          diff).count()))
+                          << "[us]" << std::endl;
+
+                TimeIt::closed_last_line = true;
             }
-            std::cout << "Done after "
-                      << TimeIt::format_number(
-                              static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::microseconds>(
-                                      diff).count()))
-                      << "[us]" << std::endl;
-
-            TimeIt::closed_last_line = true;
         }
 
         void TimeIt::indent() {
