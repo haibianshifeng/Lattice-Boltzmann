@@ -1,5 +1,7 @@
 # Lattice Boltzmann simulation
 
+<div style="text-align:center"><img src="data/1.gif"/></div>
+
 ### Build the software
 
 This software was tested on:
