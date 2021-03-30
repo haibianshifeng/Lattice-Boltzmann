@@ -15,11 +15,13 @@ This project aims to exploit the easy-to-parallelize property of the algorithm t
 
 For a maximal parallel performance, the simulation's variables have to be duplicated after each iteration, since the propagating and colliding steps are locally dependent (meaning, each lattice site's next state is dependent on its neighbors). However this allows the GPU to assign one thread for each lattice's site without worrying of synchronisation. 
 
-For boundary conditions the pragmantic bounding back method was chosen for its simplicity. Also a small Mach number of `0.1` empirically shows to achieve satisfactory compromise between visual effect and computation speed. The streaming process can be seen as a entry/exit turbine model, where water comes from left to right. 
+For boundary conditions the pragmantic bounding back method was chosen for its simplicity, and also because we really only want to have our fun crunching every last computation power out of the graphic card without worrying too much about other technical detail. Additionally, a small Mach number of `0.1` empirically shows to achieve a satisfactory compromise between visual effect and computation speed. 
 
 ## Some results
 
 For visualization, all considered macroscopic and microscopic variables of the mesh can be taken for pixel color assignment. Some of thoses are: density, flow's curl, horizontal/vertical velocity, speed. 
+
+The streaming process can be seen as a entry/exit turbine model, where water comes from left to right. 
 
 ### LBM makes it easier to deal with complex boundaries (like this cute cow)
 
