@@ -21,19 +21,19 @@ For visualization, all considered macroscopic and microscopic variables of the m
 
 ## Some results
 
-### Have you ever seen a beautiful cow in water?
+### LBM makes it easier to deal with complex boundaries (like this cute cow)
 
 <p align="center">
   <img src="data/1.gif">
 </p>
 
-### Swimming circles
+### Swimming circles with smaller Mach number
 
 <p align="center">
   <img src="data/7.gif">
 </p>
 
-### Some self-made structures
+### Some self-made structures with various geometric shapes
 
 <p align="center">
   <img src="data/3.gif">
