@@ -9,20 +9,12 @@
 Inspired by the original work of Daniel V. Schroeder[[1]](#1). 
 
 The Lattice Boltzmann is a simple and relatively young method of Computational fluid dynamics. In contrast to traditional 
-computational fluid dynamics (CFD) approaches based on the conservation of macroscopic quantities like mass, momentum, and energy, 
-the Lattice Boltzmann method (LBM) models the fluid by the kinetics of discrete particles that propagate (streaming step) 
-and collide (relaxation step) on a discrete lattice mesh. Due to its particular nature, LBM has several advantages, 
-such as dealing with complex boundaries, incorporating microscopic interactions, and parallelization of the algorithm.[[2]](#2)
+computational fluid dynamics based on the conservation of macroscopic quantities (mass, momentum, and energy) 
+the Lattice Boltzmann models the fluid by the kinetics of discrete particles that propagate and collide on a discrete lattice mesh. Due to its particular nature, LBM has several advantages, such as dealing with complex boundaries, incorporating microscopic interactions, and parallelization of the algorithm.[[2]](#2)
+
 
 This project hence aims to demonstrate the easy-to-parallelize property of the algorithm and exploits the graphical processing unit (GPU) 
-for computing and rendering purpose, specially for scientific programming. 
-
-CUDA was chosen as the language to go, since the the language was excellently engineered and makes the programming experience very 
-comfortable. If the programmer knows his way around C/C++, she or he could get familiar quickly with NVIDIA's proprietary language. The final 
-rendering is done with OpenGL. 
-
-Readers with further interest for technical details can take a look at the included `tutorial.pdf` of professor Daniel Schroeder, 
-an excellent introduction into the topic.
+for computing and rendering purpose, specially for the propagating and colliding steps, where growth of mesh has quadratical effect on growth of program running time.
 
 ## Some results
 
