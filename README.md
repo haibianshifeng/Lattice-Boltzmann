@@ -11,14 +11,14 @@ Inspired by the original work of Daniel V. Schroeder[[1]](#1).
 The Lattice Boltzmann is a simple and relatively young method of Computational fluid dynamics. In contrast to traditional 
 computational fluid dynamics based on the conservation of macroscopic quantities (mass, momentum, and energy), LBM models the fluid by the kinetics of particles that propagate and collide on a discrete lattice mesh. Due to this contrast, LBM has several interesting advantages for the studying of digital computing, such as ease of dealing with complex boundaries and parallelization of the algorithm.[[2]](#2) 
 
-In this figure we can see how fluid can be presented as discrete lattice mesh (D2Q9-Model)
+In this figure we can see how fluid can be presented as discrete lattice mesh (D2Q9-Model).
 
 <p align="center">
   <img src="data/d2q9_streaming.png">
 </p>
 
 
-This project aims to exploit the easy-to-parallelize property of the algorithm to accelerate the propagating and colliding steps, where growth of mesh has quadratical effect on growth of program running time. With a graphic card on our site, running LBM on a high resolution`1000x1000` mesh at `60FPS` is very achievable, which otherwise would be nearly impossible with even the most powerful CPU. 
+This project aims to exploit the easy-to-parallelize property of the algorithm to accelerate the propagating, colliding and bouncing steps, where growth of mesh has quadratical effect on growth of program running time. With a graphic card on our site, running LBM on a high resolution`1000x1000` mesh at `60FPS` is very achievable, which otherwise would be nearly impossible with even the most powerful CPU. The complete flow of the algorithm can be seen in the next figure.
 
 <p align="center">
   <img src="data/flowcharts.jpg">
