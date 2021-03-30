@@ -17,9 +17,9 @@ for computing and rendering purpose, specially for the propagating and colliding
 
 For boundary conditions the pragmantic bounding back method was chosen for its simplicity. Also a small Mach number of `0.1` empirically shows to achieve satisfactory compromise between visual effect and computation speed. The streaming process can be seen as a entry/exit turbine model, where water comes from left to right. 
 
-For visualization, all considered macroscopic and microscopic variables of the mesh can be taken for pixel color assignment. Some of thoses are: density, flow's curl, horizontal/vertical velocity, speed. 
-
 ## Some results
+
+For visualization, all considered macroscopic and microscopic variables of the mesh can be taken for pixel color assignment. Some of thoses are: density, flow's curl, horizontal/vertical velocity, speed. 
 
 ### LBM makes it easier to deal with complex boundaries (like this cute cow)
 
