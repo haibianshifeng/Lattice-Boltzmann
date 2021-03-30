@@ -12,9 +12,10 @@ The Lattice Boltzmann is a simple and relatively young method of Computational f
 computational fluid dynamics based on the conservation of macroscopic quantities (mass, momentum, and energy) 
 the Lattice Boltzmann models the fluid by the kinetics of discrete particles that propagate and collide on a discrete lattice mesh. Due to its particular nature, LBM has several advantages, such as dealing with complex boundaries, incorporating microscopic interactions, and parallelization of the algorithm.[[2]](#2)
 
-
 This project hence aims to demonstrate the easy-to-parallelize property of the algorithm and exploits the graphical processing unit (GPU) 
 for computing and rendering purpose, specially for the propagating and colliding steps, where growth of mesh has quadratical effect on growth of program running time.
+
+For boundary conditions the pragmantic bounding back method was chosen for its simplicity. Also a small Mach number of `0.1` empirically shows to achieve satisfactory compromise between visual effect and computation speed. The streaming process can be seen as a entry/exit turbine model, where water comes from left to right. 
 
 ## Some results
 
